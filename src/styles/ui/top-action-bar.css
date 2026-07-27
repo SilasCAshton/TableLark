@@ -1,0 +1,26 @@
+.top-action-bar {
+  position: fixed;
+  z-index: 30;
+  top: var(--floating-panel-gap);
+  right: var(--floating-panel-gap);
+  left: var(--floating-panel-gap);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--top-action-bar-height);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-large);
+  background: var(--color-topbar-bg);
+  box-shadow: var(--shadow-medium);
+}
+
+.topbar-brand { display: inline-flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; color: var(--color-topbar-text); }
+.topbar-logo { display: grid; place-items: center; width: 2.15rem; aspect-ratio: 1; color: var(--color-deep-navy); background: linear-gradient(145deg, var(--color-sunshine), var(--color-apricot)); border-radius: 50%; font-size: 0.74rem; font-weight: 900; }
+.topbar-name { font-size: 1.15rem; font-weight: 850; letter-spacing: -0.03em; }
+
+@media (max-width: 720px) {
+  .top-action-bar { gap: var(--space-2); padding-inline: var(--space-3); }
+  .topbar-name { display: none; }
+}

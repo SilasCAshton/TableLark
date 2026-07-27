@@ -1,0 +1,15 @@
+.restaurant-search-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); flex: 0 0 auto; }
+.restaurant-control { display: grid; gap: var(--space-1); min-width: 0; }
+.restaurant-control label { color: var(--color-muted-text); font-size: 0.76rem; font-weight: 750; }
+.restaurant-control input, .restaurant-control select { width: 100%; min-width: 0; min-height: 2.45rem; padding: 0.55rem 0.65rem; color: var(--color-text); background: var(--color-input-bg); border: 1px solid var(--color-input-border); border-radius: var(--radius-small); }
+.restaurant-control input:hover, .restaurant-control select:hover { border-color: var(--color-input-border-hover); }
+.hidden-gem-filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-column: 1 / -1; gap: var(--space-2); }
+.restaurant-search-actions { display: grid; grid-template-columns: 1fr auto; grid-column: 1 / -1; gap: var(--space-2); }
+.restaurant-search-actions button { min-height: 2.55rem; padding: 0.6rem 0.8rem; border: 1px solid var(--color-border); border-radius: var(--radius-small); background: var(--color-surface); font-weight: 750; }
+.restaurant-search-actions .restaurant-search-button { color: #fff; background: var(--color-primary); border-color: var(--color-primary); }
+.restaurant-search-actions .restaurant-search-button:hover:not(:disabled) { background: var(--color-primary-hover); }
+.restaurant-search-actions button:disabled { cursor: not-allowed; opacity: 0.58; }
+
+@media (max-width: 420px) {
+  .restaurant-search-controls, .hidden-gem-filters { grid-template-columns: 1fr; }
+}

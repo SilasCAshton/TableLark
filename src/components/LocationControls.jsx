@@ -1,16 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import { useMapsLibrary } from "@vis.gl/react-google-maps";
-import { useLocation } from "../Utility/LocationContext.jsx";
+import { useState } from "react";
+import { useLocation } from "../context/LocationContext.jsx";
 
-import AddressInput from "./searchComponents/AddressInput.jsx"
-import LatAndLngInput from "./searchComponents/LatAndLngInput.jsx"
-import CurrentLocationInput from "./searchComponents/CurrentLocationInput.jsx";
-
+import AddressInput from "./locationComponents/AddressInput.jsx";
+import LatAndLngInput from "./locationComponents/LatAndLngInput.jsx";
+import CurrentLocationInput from "./locationComponents/CurrentLocationInput.jsx";
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function SearchControls() {
+function LocationControls() {
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
 
@@ -18,7 +16,7 @@ function SearchControls() {
 
   function processLatitudeAndLongitude(
     requestedLatitude,
-    requestedLongitude
+    requestedLongitude,
   ) {
     if (
       requestedLatitude === "" ||
@@ -41,11 +39,14 @@ function SearchControls() {
   }
 
   return (
-    <div>
-      <h1>Search Controls</h1>
+    <section
+      className="location-controls"
+      aria-label="Choose a search location"
+    >
+      <span className="location-controls-label">Location</span>
 
       <details>
-        <summary>Search using an address</summary>
+        <summary>Address</summary>
 
         <AddressInput
           setLatitude={setLatitude}
@@ -57,36 +58,33 @@ function SearchControls() {
       </details>
 
       <details>
-        <summary>Enter coordinates manually</summary>
+        <summary>Coordinates</summary>
 
         <LatAndLngInput
-            latitude={latitude}
-            setLatitude={setLatitude}
-            longitude={longitude}
-            setLongitude={setLongitude}
-            processLatitudeAndLongitude={
-            processLatitudeAndLongitude}
-            clamp={clamp}
+          latitude={latitude}
+          setLatitude={setLatitude}
+          longitude={longitude}
+          setLongitude={setLongitude}
+          processLatitudeAndLongitude={
+            processLatitudeAndLongitude
+          }
+          clamp={clamp}
         />
       </details>
 
       <details>
-        <summary>Use your current location</summary>
+        <summary>Current location</summary>
 
         <CurrentLocationInput
-            setLatitude={setLatitude}
-            setLongitude={setLongitude}
-            processLatitudeAndLongitude={
+          setLatitude={setLatitude}
+          setLongitude={setLongitude}
+          processLatitudeAndLongitude={
             processLatitudeAndLongitude
-            }
+          }
         />
-        </details>
-
-      {/* Type of restaurant */}
-
-      {/* Search radius */}
-    </div>
+      </details>
+    </section>
   );
 }
 
-export default SearchControls;
+export default LocationControls;

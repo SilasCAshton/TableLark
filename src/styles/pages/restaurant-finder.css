@@ -1,0 +1,44 @@
+.restaurant-finder-layout {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-page-bg);
+}
+
+.restaurant-map-panel {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.restaurant-sidebar {
+  position: fixed;
+  z-index: 20;
+  top: calc(var(--top-action-bar-height) + (var(--floating-panel-gap) * 2));
+  bottom: var(--floating-panel-gap);
+  left: var(--floating-panel-gap);
+  display: flex;
+  width: min(var(--floating-panel-width), calc(100vw - (var(--floating-panel-gap) * 2)));
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-large);
+  background: var(--color-panel-bg);
+  box-shadow: var(--shadow-large);
+}
+
+@media (max-width: 720px) {
+  .restaurant-sidebar {
+    top: auto;
+    right: var(--floating-panel-gap);
+    width: auto;
+    height: min(62dvh, 38rem);
+  }
+}

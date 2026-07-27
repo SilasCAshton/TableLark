@@ -1,6 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
-
 function LatAndLngInput({
   latitude,
   setLatitude,
@@ -11,10 +8,7 @@ function LatAndLngInput({
 }) {
   return (
     <div>
-      <h2>
-        Pick the longitude and latitude and then press Set
-        Location!
-      </h2>
+      <h2>Enter latitude and longitude</h2>
 
       <label>
         Latitude
@@ -31,7 +25,7 @@ function LatAndLngInput({
             }
 
             setLatitude(
-              String(clamp(Number(latitude), -90, 90))
+              String(clamp(Number(latitude), -90, 90)),
             );
           }}
           max="90"
@@ -55,7 +49,7 @@ function LatAndLngInput({
             }
 
             setLongitude(
-              String(clamp(Number(longitude), -180, 180))
+              String(clamp(Number(longitude), -180, 180)),
             );
           }}
           max="180"
@@ -69,7 +63,7 @@ function LatAndLngInput({
         onClick={() =>
           processLatitudeAndLongitude(
             latitude,
-            longitude
+            longitude,
           )
         }
       >

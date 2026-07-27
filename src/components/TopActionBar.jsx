@@ -1,19 +1,18 @@
-import SearchControls from "./SearchControls.jsx"
+import LocationControls from "./LocationControls.jsx";
+function TopActionBar() {
+  return (
+    <header className="top-action-bar">
+      <div className="topbar-brand" aria-label="TableLark home">
+        <span className="topbar-logo" aria-hidden="true">
+          TL
+        </span>
 
-function TopActionBar (){
-    return (
-        <section className="TopActionBar">
-            <input 
-                type="number" 
-                placeholder="Search Radius"
-                max="25"
-                min="1"
-            />
-            <SearchControls />
+        <span className="topbar-name">TableLark</span>
+      </div>
 
-        </section>
-        
-    )
+      <LocationControls />
+    </header>
+  );
 }
 
-export default TopActionBar
+export default TopActionBar;

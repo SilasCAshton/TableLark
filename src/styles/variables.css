@@ -1,0 +1,166 @@
+:root {
+  /*
+   * Core TableLark palette
+   */
+  --color-peach: #ff8a65;
+  --color-apricot: #ffc06a;
+  --color-sunshine: #ffe066;
+  --color-coral: #ff6b6b;
+  --color-deep-navy: #1a1d2e;
+
+  /*
+   * Page backgrounds
+   *
+   * These are all fully opaque.
+   */
+  --color-page-bg: #fff7ed;
+  --color-surface: #ffffff;
+  --color-surface-alt: #fff0dc;
+  --color-surface-warm: #ffe4bd;
+  --color-surface-highlight: #fff4bd;
+
+  /*
+   * Main layout sections
+   */
+  --color-topbar-bg: var(--color-deep-navy);
+  --color-topbar-text: #ffffff;
+  --color-topbar-muted: #ffe6b0;
+
+  --color-panel-bg: #fffaf4;
+  --color-panel-border: #f1c89c;
+
+  --color-card-bg: #ffffff;
+  --color-card-hover: #fff4e7;
+  --color-card-selected: #fff0bd;
+  --color-card-selected-border: var(--color-coral);
+
+  /*
+   * Text
+   */
+  --color-heading: var(--color-deep-navy);
+  --color-text: #292d42;
+  --color-muted-text: #676b7c;
+  --color-subtle-text: #85899a;
+  --color-text-on-dark: #ffffff;
+
+  /*
+   * Primary action colors
+   */
+  --color-primary: var(--color-coral);
+  --color-primary-hover: #eb5757;
+  --color-primary-active: #d94b4b;
+  --color-primary-text: var(--color-deep-navy);
+
+  /*
+   * Secondary action colors
+   */
+  --color-secondary: var(--color-peach);
+  --color-secondary-hover: #f27654;
+  --color-secondary-active: #df6547;
+  --color-secondary-text: var(--color-deep-navy);
+
+  /*
+   * Accent colors
+   */
+  --color-accent: var(--color-sunshine);
+  --color-accent-hover: #f4cf4f;
+  --color-accent-text: var(--color-deep-navy);
+
+  --color-warm-accent: var(--color-apricot);
+  --color-warm-accent-hover: #f2ae52;
+
+  /*
+   * Inputs
+   */
+  --color-input-bg: #ffffff;
+  --color-input-text: var(--color-deep-navy);
+  --color-input-border: #e7bd91;
+  --color-input-border-hover: var(--color-peach);
+  --color-input-border-focus: var(--color-coral);
+  --color-input-placeholder: #8e8990;
+
+  /*
+   * Borders and dividers
+   */
+  --color-border: #edc69d;
+  --color-border-light: #f5dfc8;
+  --color-divider: #efd4b6;
+
+  /*
+   * Links
+   */
+  --color-link: #c8424d;
+  --color-link-hover: #9f303b;
+
+  /*
+   * Status colors
+   */
+  --color-success: #3f8f65;
+  --color-success-bg: #e6f5ec;
+
+  --color-warning: #a26800;
+  --color-warning-bg: #fff2c2;
+
+  --color-error: #b93643;
+  --color-error-bg: #ffe8e8;
+
+  /*
+   * Restaurant-specific styling
+   */
+  --color-hidden-gem-bg: var(--color-sunshine);
+  --color-hidden-gem-text: var(--color-deep-navy);
+
+  --color-rating: #dc8d00;
+  --color-price: #af4550;
+
+  /*
+   * Focus styling
+   */
+  --color-focus: var(--color-coral);
+  --focus-ring: 0 0 0 3px #ffd0c8;
+
+  /*
+   * Shadows
+   */
+  --shadow-small:
+    0 2px 5px rgb(26 29 46 / 12%);
+
+  --shadow-medium:
+    0 6px 18px rgb(26 29 46 / 16%);
+
+  --shadow-large:
+    0 14px 36px rgb(26 29 46 / 20%);
+
+  /*
+   * Border radii
+   */
+  --radius-small: 0.4rem;
+  --radius-medium: 0.75rem;
+  --radius-large: 1rem;
+  --radius-xl: 1.35rem;
+  --radius-pill: 999px;
+
+  /*
+   * Spacing
+   */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /*
+   * Main layout sizes
+   */
+  --top-action-bar-height: 64px;
+  --floating-panel-width: 390px;
+  --floating-panel-gap: 1rem;
+
+  /*
+   * Animation
+   */
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
+}

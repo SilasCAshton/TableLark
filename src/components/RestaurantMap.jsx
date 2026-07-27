@@ -1,41 +1,36 @@
-import { useEffect } from "react";
-import {
-  Map,
-  AdvancedMarker,
-  useMap,
-} from "@vis.gl/react-google-maps";
+import { Map } from "@vis.gl/react-google-maps";
 
-import { useLocation } from "../Utility/LocationContext.jsx";
-
-function MoveMapToLocation({ location }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!map) return;
-
-    map.panTo(location);
-  }, [map, location]);
-
-  return null;
-}
-
+import { useLocation } from "../context/LocationContext.jsx";
+import RestaurantMarkers from "./restaurants/RestaurantMarkers.jsx";
 function RestaurantMap() {
   const { location } = useLocation();
 
-  return (
-    <Map
-      defaultCenter={location}
-      defaultZoom={13}
-      mapId={import.meta.env.VITE_GOOGLE_MAP_ID}
-      style={{
-        width: "100%",
-        height: "500px",
-      }}
-    >
-      <MoveMapToLocation location={location} />
+  const mapCenter = {
+    lat: Number(location.lat),
+    lng: Number(location.lng),
+  };
 
-     <AdvancedMarker position={location} />
-    </Map>
+  return (
+    <section
+      className="restaurant-map-container"
+      aria-label="Restaurant map"
+    >
+      <Map
+        defaultCenter={mapCenter}
+        defaultZoom={13}
+        mapId={import.meta.env.VITE_GOOGLE_MAP_ID}
+        gestureHandling="greedy"
+        mapTypeControl={false}
+        streetViewControl={false}
+        fullscreenControl={false}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <RestaurantMarkers />
+      </Map>
+    </section>
   );
 }
 
