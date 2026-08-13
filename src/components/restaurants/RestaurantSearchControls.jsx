@@ -1,6 +1,8 @@
-import { useLocation } from "../../context/LocationContext.jsx";
-import { useRestaurantSearch } from "../../context/RestaurantSearchContext.jsx";
-import { useNearbyRestaurants } from "./useNearbyRestaurants.js";
+"use client";
+
+import { useLocation } from "@/context/LocationContext";
+import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
+import { useRestaurantSearchRequest } from "@/hooks/useRestaurantSearchRequest";
 const CATEGORY_OPTIONS = [
   ["restaurant", "All restaurants"],
   ["cafe", "Cafes"],
@@ -69,21 +71,13 @@ function RestaurantSearchControls() {
   } = useRestaurantSearch();
 
   const {
-    placesLibraryIsReady,
-    searchNearbyRestaurants,
-    searchSubdividedHiddenGems,
+    searchRestaurants,
     clearRestaurants,
-  } = useNearbyRestaurants();
+  } = useRestaurantSearchRequest();
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    if (searchMode === "hidden") {
-      searchSubdividedHiddenGems();
-      return;
-    }
-
-    searchNearbyRestaurants();
+    searchRestaurants();
   }
 
   function handleModeChange(event) {
@@ -285,7 +279,7 @@ function RestaurantSearchControls() {
         <button
           className="restaurant-search-button"
           type="submit"
-          disabled={!placesLibraryIsReady || isLoading}
+          disabled={isLoading}
         >
           {isLoading
             ? "Searching..."

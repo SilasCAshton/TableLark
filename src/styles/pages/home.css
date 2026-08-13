@@ -1,0 +1,282 @@
+.home-page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #fffaf1;
+}
+
+.home-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: min(82vh, 54rem);
+  overflow: visible;
+  color: #fff;
+  background-color: #38251d;
+  background-image: url("/restaurant-hero-placeholder.svg");
+  background-position: center;
+  background-size: cover;
+}
+
+.home-hero__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(21 18 24 / 82%) 0%, rgb(25 20 22 / 57%) 48%, rgb(25 20 22 / 22%) 100%),
+    linear-gradient(0deg, rgb(22 17 17 / 62%) 0%, transparent 46%);
+}
+
+.home-header,
+.home-hero__content {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.home-header {
+  align-self: start;
+  padding-block: 1.75rem;
+}
+
+.home-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #fff;
+}
+
+.home-logo__mark {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 66%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 13%);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(8px);
+}
+
+.home-logo__name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.home-hero__content {
+  align-self: end;
+  max-width: 76rem;
+  padding-block: 5rem 6.5rem;
+}
+
+.home-hero__eyebrow,
+.home-story__eyebrow {
+  margin-bottom: 1rem;
+  color: #ffd497;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.home-hero h1 {
+  max-width: 12ch;
+  margin-bottom: 1.25rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 7vw, 6.75rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.home-hero__intro {
+  max-width: 38rem;
+  margin-bottom: 2rem;
+  color: rgb(255 255 255 / 88%);
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.home-button {
+  min-height: 3.25rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-weight: 750;
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.home-button:hover {
+  transform: translateY(-2px);
+}
+
+.home-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.home-button--primary {
+  background: #ffd072;
+  color: #27201e;
+}
+
+.home-button--primary:hover {
+  background: #ffdc98;
+}
+
+.home-button--secondary {
+  border-color: rgb(255 255 255 / 64%);
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.home-button--secondary:hover {
+  border-color: #fff;
+  background: rgb(255 255 255 / 20%);
+}
+
+.home-hero-search__message {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 0.75rem;
+  background: rgb(30 18 18 / 68%);
+  color: #fff;
+}
+
+.home-hero-search__address-panel {
+  max-width: 38rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 1rem;
+  background: rgb(25 20 22 / 68%);
+  backdrop-filter: blur(12px);
+}
+
+.home-hero-search__address-label {
+  display: grid;
+  gap: 0.2rem;
+  margin-bottom: 0.8rem;
+  color: #fff;
+  font-weight: 750;
+}
+
+.home-hero-search__address-label span,
+.home-hero-search__address-panel p {
+  color: rgb(255 255 255 / 76%);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.home-hero-search__address-panel gmp-place-autocomplete {
+  display: block;
+  width: 100%;
+}
+
+.home-hero-search__address-panel p {
+  margin: 0.75rem 0 0;
+}
+
+.home-story {
+  position: relative;
+  z-index: 0;
+  width: min(100% - 3rem, 68rem);
+  margin-inline: auto;
+  padding-block: clamp(4.5rem, 9vw, 8.5rem);
+  text-align: center;
+}
+
+.home-story__eyebrow {
+  color: #b6513d;
+}
+
+.home-story h2 {
+  max-width: 18ch;
+  margin: 0 auto 2rem;
+  color: #24202b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.home-story > p:not(.home-story__eyebrow) {
+  max-width: 47rem;
+  margin: 0 auto 1.2rem;
+  color: #665e59;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.8;
+}
+
+.home-story__accent {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.25rem, 5vw, 4.5rem);
+  margin-top: 3rem;
+  color: #9c493b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-style: italic;
+}
+
+.home-story__accent span + span::before {
+  margin-right: clamp(1.25rem, 5vw, 4.5rem);
+  color: #e2af71;
+  content: "•";
+  font-style: normal;
+}
+
+@media (max-width: 620px) {
+  .home-header,
+  .home-hero__content,
+  .home-story {
+    width: min(100% - 2rem, 76rem);
+  }
+
+  .home-hero {
+    min-height: 46rem;
+    background-position: 62% center;
+  }
+
+  .home-hero__content {
+    padding-block: 4rem;
+  }
+
+  .home-hero__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-story__accent {
+    gap: 0.7rem;
+  }
+
+  .home-story__accent span + span::before {
+    margin-right: 0.7rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-button {
+    transition: none;
+  }
+}

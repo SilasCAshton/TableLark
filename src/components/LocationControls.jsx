@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useLocation } from "../context/LocationContext.jsx";
+"use client";
 
-import AddressInput from "./locationComponents/AddressInput.jsx";
-import LatAndLngInput from "./locationComponents/LatAndLngInput.jsx";
-import CurrentLocationInput from "./locationComponents/CurrentLocationInput.jsx";
+import { useState } from "react";
+import { useLocation } from "@/context/LocationContext";
+
+import AddressInput from "./locationComponents/AddressInput";
+import LatAndLngInput from "./locationComponents/LatAndLngInput";
+import CurrentLocationInput from "./locationComponents/CurrentLocationInput";
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }

@@ -1,4 +1,4 @@
-import LocationControls from "./LocationControls.jsx";
+import LocationControls from "./LocationControls";
 function TopActionBar() {
   return (
     <header className="top-action-bar">

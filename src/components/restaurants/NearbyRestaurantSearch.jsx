@@ -1,5 +1,5 @@
-import RestaurantSearchControls from "./RestaurantSearchControls.jsx";
-import RestaurantResults from "./RestaurantResults.jsx";
+import RestaurantSearchControls from "./RestaurantSearchControls";
+import RestaurantResults from "./RestaurantResults";
 function NearbyRestaurantSearch() {
   return (
     <section className="nearby-restaurant-search">

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   useContext,
@@ -6,12 +8,17 @@ import {
 
 const LocationContext = createContext();
 
-export function LocationProvider({ children }) {
-  const [location, setLocation] = useState({
-    lat: 40.2973,
-    lng: -75.0616,
-    radiusMeters: 8047,
-  });
+const DEFAULT_LOCATION = {
+  lat: 40.2973,
+  lng: -75.0616,
+  radiusMeters: 8047,
+};
+
+export function LocationProvider({ children, initialLocation }) {
+  const [location, setLocation] = useState(() => ({
+    ...DEFAULT_LOCATION,
+    ...initialLocation,
+  }));
 
   function updateLocation(lat, lng) {
     setLocation((currentLocation) => ({

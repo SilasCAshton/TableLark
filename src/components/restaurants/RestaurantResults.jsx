@@ -1,4 +1,6 @@
-import { useRestaurantSearch } from "../../context/RestaurantSearchContext.jsx";
+"use client";
+
+import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
 function formatPriceLevel(priceLevel) {
   const priceLabels = {
     FREE: "Free",

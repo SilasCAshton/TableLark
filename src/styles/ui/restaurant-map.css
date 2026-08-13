@@ -5,6 +5,50 @@
   min-height: 0;
 }
 
+.restaurant-map-container {
+  position: relative;
+  background: var(--color-surface-warm);
+}
+
+.restaurant-map-loading {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  color: var(--color-heading);
+  background: var(--color-surface-warm);
+}
+
+.restaurant-map-loading p {
+  margin: 0;
+  font-weight: 750;
+}
+
+.restaurant-map-loading__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 4px solid rgb(255 255 255 / 68%);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: restaurant-map-spin 800ms linear infinite;
+}
+
+@keyframes restaurant-map-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .restaurant-map-loading__spinner {
+    animation: none;
+    border-color: var(--color-primary);
+  }
+}
+
 .restaurant-info-window { max-width: 16rem; color: #202124; }
 .restaurant-info-window h3 { margin: 0 0 0.4rem; font-size: 1rem; }
 .restaurant-info-window p { margin: 0.3rem 0; }

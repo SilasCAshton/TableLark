@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+"use client";
+
+import { useEffect, useMemo } from "react";
 import {
   AdvancedMarker,
   InfoWindow,
   useMap,
-  Pin,
 } from "@vis.gl/react-google-maps";
 
-import { useLocation } from "../../context/LocationContext.jsx";
-import { useRestaurantSearch } from "../../context/RestaurantSearchContext.jsx";
+import { useLocation } from "@/context/LocationContext";
+import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
 
 function MapPositionController({
   searchCenter,
@@ -21,7 +22,7 @@ function MapPositionController({
     }
 
     map.panTo(searchCenter);
-  }, [map, searchCenter.lat, searchCenter.lng]);
+  }, [map, searchCenter]);
 
   useEffect(() => {
     if (!map || !selectedRestaurant?.location) {
@@ -49,10 +50,13 @@ function RestaurantMarkers() {
     selectRestaurant,
   } = useRestaurantSearch();
 
-  const searchCenter = {
-    lat: Number(location.lat),
-    lng: Number(location.lng),
-  };
+  const searchCenter = useMemo(
+    () => ({
+      lat: Number(location.lat),
+      lng: Number(location.lng),
+    }),
+    [location.lat, location.lng],
+  );
 
   return (
     <>
