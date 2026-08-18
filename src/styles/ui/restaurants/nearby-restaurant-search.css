@@ -1,12 +1,35 @@
-.nearby-restaurant-search { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; height: 100%; min-height: 0; padding: var(--space-4); }
+.nearby-restaurant-search { position: relative; display: flex; flex-direction: column; gap: var(--space-3); width: 100%; height: 100%; min-height: 0; padding: var(--space-4); }
 .restaurant-search-header { flex: 0 0 auto; padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-divider); }
-.restaurant-search-header h1 { margin-bottom: var(--space-1); color: var(--color-heading); font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.03em; }
-.restaurant-search-header > p:last-child { margin-bottom: 0; color: var(--color-muted-text); font-size: 0.86rem; }
+.restaurant-search-header h1 { margin: 0; color: var(--color-heading); font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.03em; }
+.restaurant-search-header > p:last-child { margin: var(--space-1) 0 0; color: var(--color-muted-text); font-size: 0.86rem; }
 .restaurant-eyebrow { margin-bottom: var(--space-1); color: var(--color-link); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
+.restaurant-panel-toggle { display: none; }
+.restaurant-search-content { display: flex; flex: 1 1 0; flex-direction: column; gap: var(--space-3); min-height: 0; }
 
 @media (max-width: 720px) {
-  .nearby-restaurant-search { gap: var(--space-2); padding: var(--space-3); }
+  .nearby-restaurant-search { gap: var(--space-2); padding: 1.75rem var(--space-3) var(--space-3); }
   .restaurant-search-header { padding-bottom: var(--space-2); }
   .restaurant-search-header h1 { font-size: 1.15rem; }
   .restaurant-search-header > p:last-child { display: none; }
+  .restaurant-panel-toggle { position: absolute; top: 0.25rem; left: 50%; display: grid; width: 3rem; min-height: 1.35rem; padding: 0; place-items: center; color: var(--color-subtle-text); border: 0; background: transparent; transform: translateX(-50%); }
+  .restaurant-panel-toggle::before { width: 0.55rem; height: 0.55rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; content: ""; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--transition-fast); }
+  .restaurant-search-content { gap: var(--space-2); }
+
+  .nearby-restaurant-search--collapsed {
+    height: auto;
+    gap: 0;
+    padding-top: 1.6rem;
+  }
+
+  .nearby-restaurant-search--collapsed .restaurant-panel-toggle::before { transform: translateY(0.12rem) rotate(225deg); }
+
+  .nearby-restaurant-search--collapsed .restaurant-eyebrow,
+  .nearby-restaurant-search--collapsed .restaurant-search-content {
+    display: none;
+  }
+
+  .nearby-restaurant-search--collapsed .restaurant-search-header {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
 }

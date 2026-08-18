@@ -14,16 +14,19 @@ const validNearbySearch = {
   },
   radiusMeters: 8047,
   filters: {
-    category: "restaurant",
+    presetId: "all",
     maxResults: 20,
   },
 };
 
 test("validates and normalizes a nearby search", () => {
-  assert.deepEqual(
-    validateRestaurantSearch(validNearbySearch),
-    validNearbySearch,
-  );
+  const search = validateRestaurantSearch(validNearbySearch);
+
+  assert.equal(search.filters.presetId, "all");
+  assert.deepEqual(search.filters.includedPrimaryTypes, [
+    "restaurant",
+  ]);
+  assert.equal(search.filters.maxResults, 20);
 });
 
 test("validates hidden-gem filters", () => {
@@ -43,14 +46,35 @@ test("validates hidden-gem filters", () => {
   assert.equal(search.filters.maxReviews, 250);
 });
 
-test("rejects unsupported categories", () => {
+test("resolves a cuisine preset to trusted Google types", () => {
+  const search = validateRestaurantSearch({
+    ...validNearbySearch,
+    filters: {
+      ...validNearbySearch.filters,
+      presetId: "asian",
+    },
+  });
+
+  assert.ok(
+    search.filters.includedPrimaryTypes.includes(
+      "chinese_restaurant",
+    ),
+  );
+  assert.ok(
+    search.filters.includedPrimaryTypes.includes(
+      "sushi_restaurant",
+    ),
+  );
+});
+
+test("rejects unsupported search presets", () => {
   assert.throws(
     () =>
       validateRestaurantSearch({
         ...validNearbySearch,
         filters: {
           ...validNearbySearch.filters,
-          category: "anything",
+          presetId: "anything",
         },
       }),
     SearchValidationError,

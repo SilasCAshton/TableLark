@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 
-function CurrentLocationInput({
-  setLatitude,
-  setLongitude,
-  processLatitudeAndLongitude,
-}) {
+function CurrentLocationInput({ processLatitudeAndLongitude }) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [accuracy, setAccuracy] = useState(null);
@@ -30,10 +26,6 @@ function CurrentLocationInput({
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
         const accuracyInMeters = position.coords.accuracy;
-
-        // Update the state owned by SearchControls.
-        setLatitude(String(lat));
-        setLongitude(String(lng));
 
         // Immediately update LocationContext.
         processLatitudeAndLongitude(lat, lng);
@@ -83,9 +75,7 @@ function CurrentLocationInput({
   }
 
   return (
-    <div>
-      <h2>Use your current location</h2>
-
+    <div className="location-current-input">
       <button
         type="button"
         onClick={handleUseCurrentLocation}
@@ -93,7 +83,7 @@ function CurrentLocationInput({
       >
         {isLoading
           ? "Finding your location..."
-          : "Use Current Location"}
+          : "Use current location"}
       </button>
 
       {message && <p role="status">{message}</p>}

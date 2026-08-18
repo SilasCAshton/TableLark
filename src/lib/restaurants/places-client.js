@@ -31,7 +31,7 @@ export class PlacesServiceError extends Error {
 export async function searchNearbyPlaces({
   center,
   radiusMeters,
-  category,
+  includedPrimaryTypes,
   maxResults,
   rankPreference,
   signal,
@@ -65,7 +65,7 @@ export async function searchNearbyPlaces({
       body: JSON.stringify({
         languageCode: "en",
         regionCode: "US",
-        includedPrimaryTypes: [category],
+        includedPrimaryTypes,
         maxResultCount: maxResults,
         rankPreference,
         locationRestriction: {

@@ -24,3 +24,7 @@
   .restaurant-settings-grid { grid-template-columns: 1fr; max-height: 15rem; }
   .hidden-gem-filters { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 360px) {
+  .restaurant-search-actions { grid-template-columns: 1fr; }
+}

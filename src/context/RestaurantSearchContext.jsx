@@ -8,21 +8,23 @@ import {
   useState,
 } from "react";
 
+import { DEFAULT_RESTAURANT_SEARCH_PRESET_ID } from "@/lib/restaurants/search-presets";
+
 const RestaurantSearchContext = createContext(null);
 
 const DEFAULT_NEARBY_SEARCH = {
-  category: "restaurant",
+  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   maxResults: 20,
 };
 
 const DEFAULT_POPULAR_SEARCH = {
-  category: "restaurant",
+  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   minRating: 4,
   maxResults: 20,
 };
 
 const DEFAULT_HIDDEN_GEM_SEARCH = {
-  category: "restaurant",
+  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   minRating: 4,
   minReviews: 10,
   maxReviews: 300,

@@ -1,15 +1,6 @@
-const SEARCH_MODES = new Set(["nearby", "popular", "hidden"]);
+import { getRestaurantSearchPreset } from "./search-presets.js";
 
-const RESTAURANT_CATEGORIES = new Set([
-  "restaurant",
-  "cafe",
-  "bakery",
-  "pizza_restaurant",
-  "italian_restaurant",
-  "mexican_restaurant",
-  "chinese_restaurant",
-  "seafood_restaurant",
-]);
+const SEARCH_MODES = new Set(["nearby", "popular", "hidden"]);
 
 export class SearchValidationError extends Error {}
 
@@ -98,11 +89,12 @@ export function validateRestaurantSearch(payload) {
     );
   }
 
-  const category = filters.category;
+  const presetId = filters.presetId;
+  const preset = getRestaurantSearchPreset(presetId);
 
-  if (!RESTAURANT_CATEGORIES.has(category)) {
+  if (!preset) {
     throw new SearchValidationError(
-      "The selected restaurant category is not supported.",
+      "The selected restaurant search preset is not supported.",
     );
   }
 
@@ -129,7 +121,8 @@ export function validateRestaurantSearch(payload) {
       50000,
     ),
     filters: {
-      category,
+      presetId,
+      includedPrimaryTypes: [...preset.includedPrimaryTypes],
       maxResults: readIntegerInRange(
         filters.maxResults ?? 20,
         "Maximum results",

@@ -1,6 +1,6 @@
 import RestaurantMap from "@/components/RestaurantMap";
 import TopActionBar from "@/components/TopActionBar";
-import NearbyRestaurantSearch from "@/components/restaurants/NearbyRestaurantSearch";
+import RestaurantDiscoveryPanel from "@/components/restaurants/RestaurantDiscoveryPanel";
 import AppProviders from "../providers";
 
 export const metadata = {
@@ -37,12 +37,7 @@ export default async function RestaurantFinderPage({ searchParams }) {
 
         <TopActionBar />
 
-        <aside
-          className="restaurant-sidebar"
-          aria-label="Restaurant search and results"
-        >
-          <NearbyRestaurantSearch />
-        </aside>
+        <RestaurantDiscoveryPanel />
       </main>
     </AppProviders>
   );

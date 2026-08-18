@@ -1,19 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { useLocation } from "@/context/LocationContext";
 
 import AddressInput from "./locationComponents/AddressInput";
-import LatAndLngInput from "./locationComponents/LatAndLngInput";
 import CurrentLocationInput from "./locationComponents/CurrentLocationInput";
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
 function LocationControls() {
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-
   const { updateLocation } = useLocation();
 
   function processLatitudeAndLongitude(
@@ -45,45 +41,26 @@ function LocationControls() {
       className="location-controls"
       aria-label="Choose a search location"
     >
-      <span className="location-controls-label">Location</span>
+      <details className="location-menu">
+        <summary>Location</summary>
 
-      <details>
-        <summary>Address</summary>
+        <div className="location-menu__panel">
+          <CurrentLocationInput
+            processLatitudeAndLongitude={
+              processLatitudeAndLongitude
+            }
+          />
 
-        <AddressInput
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          processLatitudeAndLongitude={
-            processLatitudeAndLongitude
-          }
-        />
-      </details>
+          <div className="location-method-divider" aria-hidden="true">
+            <span>or</span>
+          </div>
 
-      <details>
-        <summary>Coordinates</summary>
-
-        <LatAndLngInput
-          latitude={latitude}
-          setLatitude={setLatitude}
-          longitude={longitude}
-          setLongitude={setLongitude}
-          processLatitudeAndLongitude={
-            processLatitudeAndLongitude
-          }
-          clamp={clamp}
-        />
-      </details>
-
-      <details>
-        <summary>Current location</summary>
-
-        <CurrentLocationInput
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          processLatitudeAndLongitude={
-            processLatitudeAndLongitude
-          }
-        />
+          <AddressInput
+            processLatitudeAndLongitude={
+              processLatitudeAndLongitude
+            }
+          />
+        </div>
       </details>
     </section>
   );

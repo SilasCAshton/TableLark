@@ -1,22 +1,25 @@
-.location-controls { position: relative; display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); min-width: 0; color: var(--color-topbar-text); }
-.location-controls-label { margin-right: var(--space-1); color: var(--color-topbar-muted); font-size: 0.76rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.08em; }
+.location-controls { position: relative; display: flex; align-items: center; justify-content: flex-end; min-width: 0; color: var(--color-topbar-text); }
 .location-controls details { position: relative; }
-.location-controls summary { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.5rem 0.72rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 700; list-style: none; white-space: nowrap; }
+.location-controls summary { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.25rem; padding: 0.5rem 0.8rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 750; list-style: none; white-space: nowrap; }
 .location-controls summary::-webkit-details-marker { display: none; }
+.location-controls summary::after { width: 0.45rem; height: 0.45rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; content: ""; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--transition-fast); }
 .location-controls details[open] summary { color: var(--color-link); border-color: var(--color-primary); background: var(--color-surface-highlight); }
-.location-controls details > div { position: absolute; top: calc(100% + 0.65rem); right: 0; width: min(23rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - var(--top-action-bar-height) - 3rem); padding: var(--space-4); overflow-y: auto; color: var(--color-text); background: var(--color-panel-bg); border: 1px solid var(--color-panel-border); border-radius: var(--radius-medium); box-shadow: var(--shadow-medium); }
-.location-controls details > div h2 { margin-bottom: var(--space-2); color: var(--color-heading); font-size: 1.05rem; }
-.location-controls details > div p { margin-bottom: var(--space-3); color: var(--color-muted-text); font-size: 0.88rem; }
-.location-controls label { display: grid; gap: var(--space-1); margin-bottom: var(--space-3); font-size: 0.82rem; font-weight: 700; }
+.location-controls details[open] summary::after { transform: translateY(0.12rem) rotate(225deg); }
+.location-menu__panel { position: absolute; top: calc(100% + 0.65rem); right: 0; width: min(23rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - var(--top-action-bar-height) - 3rem); padding: var(--space-4); overflow-y: auto; color: var(--color-text); background: var(--color-panel-bg); border: 1px solid var(--color-panel-border); border-radius: var(--radius-medium); box-shadow: var(--shadow-medium); }
+.location-menu__panel p { margin: var(--space-3) 0 0; color: var(--color-muted-text); font-size: 0.82rem; }
 .location-controls input, .location-controls select, .location-controls button { width: 100%; min-height: 2.5rem; padding: 0.6rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-small); background: var(--color-surface); }
 .location-controls button { color: #fff; background: var(--color-primary); border-color: var(--color-primary); font-weight: 750; }
 .location-controls button:hover:not(:disabled) { background: var(--color-primary-hover); }
 .location-controls button:disabled { cursor: not-allowed; opacity: 0.6; }
-.location-controls gmp-place-autocomplete { display: block; width: 100%; margin-bottom: var(--space-3); }
+.location-controls gmp-place-autocomplete { display: block; width: 100%; }
+.location-method-divider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; color: var(--color-subtle-text); font-size: 0.72rem; font-weight: 700; text-transform: lowercase; }
+.location-method-divider::before, .location-method-divider::after { flex: 1; height: 1px; background: var(--color-divider); content: ""; }
 
 @media (max-width: 720px) {
-  .location-controls-label { display: none; }
-  .location-controls { gap: 0.3rem; }
   .location-controls summary { min-height: 2.15rem; padding-inline: 0.52rem; font-size: 0.74rem; }
-  .location-controls details > div { position: fixed; top: calc(var(--floating-panel-gap) + var(--top-action-bar-height) + 0.4rem); right: var(--floating-panel-gap); left: var(--floating-panel-gap); width: auto; }
+  .location-menu__panel { position: fixed; top: calc(var(--floating-panel-gap) + var(--top-action-bar-height) + 0.4rem); right: var(--floating-panel-gap); left: var(--floating-panel-gap); width: auto; }
+}
+
+@media (max-width: 360px) {
+  .location-controls summary { padding-inline: 0.45rem; font-size: 0.7rem; }
 }

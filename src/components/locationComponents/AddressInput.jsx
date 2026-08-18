@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 
-function AddressInput({
-  setLatitude, 
-  setLongitude,
-  processLatitudeAndLongitude,
-}) {
+function AddressInput({ processLatitudeAndLongitude }) {
   const placesLibrary = useMapsLibrary("places");
 
   const autocompleteContainerRef = useRef(null);
@@ -43,7 +39,7 @@ function AddressInput({
     const autocomplete =
       new placesLibrary.PlaceAutocompleteElement();
 
-    autocomplete.placeholder = "Start typing an address...";
+    autocomplete.placeholder = "Enter another address";
     autocomplete.description = "Search for an address";
     autocomplete.style.width = "100%";
 
@@ -87,13 +83,6 @@ function AddressInput({
          */
         const lat = place.location.lat();
         const lng = place.location.lng();
-
-        /*
-         * Update the latitude and longitude state owned by
-         * the parent SearchControls component.
-         */
-        setLatitude(String(lat));
-        setLongitude(String(lng));
 
         /*
          * Pass the new coordinates directly into the processing
@@ -145,20 +134,13 @@ function AddressInput({
         container.removeChild(autocomplete);
       }
     };
-  }, [placesLibrary, setLatitude, setLongitude]);
+  }, [placesLibrary]);
 
   return (
-    <div>
-      <h2>Enter an address</h2>
-
-      <p>
-        Start typing, then select an address from Google's
-        suggestions.
-      </p>
-
+    <div className="location-address-input">
       <div ref={autocompleteContainerRef} />
 
-      {!placesLibrary && <p>Loading address search...</p>}
+      {!placesLibrary && <p role="status">Loading address search...</p>}
 
       {isLoading && <p>Getting coordinates...</p>}
 

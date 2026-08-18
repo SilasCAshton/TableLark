@@ -3,16 +3,11 @@
 import { useLocation } from "@/context/LocationContext";
 import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
 import { useRestaurantSearchRequest } from "@/hooks/useRestaurantSearchRequest";
-const CATEGORY_OPTIONS = [
-  ["restaurant", "All restaurants"],
-  ["cafe", "Cafes"],
-  ["bakery", "Bakeries"],
-  ["pizza_restaurant", "Pizza"],
-  ["italian_restaurant", "Italian"],
-  ["mexican_restaurant", "Mexican"],
-  ["chinese_restaurant", "Chinese"],
-  ["seafood_restaurant", "Seafood"],
-];
+import {
+  DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
+  getRestaurantSearchPreset,
+  RESTAURANT_SEARCH_PRESETS,
+} from "@/lib/restaurants/search-presets";
 
 const SEARCH_MODE_LABELS = {
   nearby: "Nearby",
@@ -28,10 +23,10 @@ const RADIUS_LABELS = {
   32187: "20 miles",
 };
 
-function CategoryInput({ id, value, onChange }) {
+function SearchPresetInput({ id, value, onChange }) {
   return (
     <div className="restaurant-control">
-      <label htmlFor={id}>Place category</label>
+      <label htmlFor={id}>Cuisine</label>
 
       <select
         id={id}
@@ -40,9 +35,9 @@ function CategoryInput({ id, value, onChange }) {
           onChange(event.target.value)
         }
       >
-        {CATEGORY_OPTIONS.map(([optionValue, label]) => (
-          <option key={optionValue} value={optionValue}>
-            {label}
+        {RESTAURANT_SEARCH_PRESETS.map((preset) => (
+          <option key={preset.id} value={preset.id}>
+            {preset.name}
           </option>
         ))}
       </select>
@@ -85,17 +80,18 @@ function RestaurantSearchControls() {
     clearRestaurants();
   }
 
-  const activeCategory =
+  const activePresetId =
     searchMode === "popular"
-      ? popularSearch.category
+      ? popularSearch.presetId
       : searchMode === "hidden"
-        ? hiddenGemSearch.category
-        : nearbySearch.category;
+        ? hiddenGemSearch.presetId
+        : nearbySearch.presetId;
 
-  const categoryLabel =
-    CATEGORY_OPTIONS.find(
-      ([optionValue]) => optionValue === activeCategory,
-    )?.[1] ?? "All restaurants";
+  const presetLabel =
+    getRestaurantSearchPreset(activePresetId)?.name ??
+    getRestaurantSearchPreset(
+      DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
+    ).name;
 
   const radiusLabel =
     RADIUS_LABELS[location.radiusMeters] ??
@@ -114,7 +110,7 @@ function RestaurantSearchControls() {
 
           <span className="restaurant-settings-summary">
             {SEARCH_MODE_LABELS[searchMode]} · {radiusLabel} ·{" "}
-            {categoryLabel}
+            {presetLabel}
           </span>
         </summary>
 
@@ -154,22 +150,22 @@ function RestaurantSearchControls() {
           </div>
 
           {searchMode === "nearby" && (
-            <CategoryInput
-              id="nearby-category"
-              value={nearbySearch.category}
+            <SearchPresetInput
+              id="nearby-preset"
+              value={nearbySearch.presetId}
               onChange={(value) =>
-                updateNearbySearch("category", value)
+                updateNearbySearch("presetId", value)
               }
             />
           )}
 
           {searchMode === "popular" && (
             <>
-              <CategoryInput
-                id="popular-category"
-                value={popularSearch.category}
+              <SearchPresetInput
+                id="popular-preset"
+                value={popularSearch.presetId}
                 onChange={(value) =>
-                  updatePopularSearch("category", value)
+                  updatePopularSearch("presetId", value)
                 }
               />
 
@@ -200,11 +196,11 @@ function RestaurantSearchControls() {
 
           {searchMode === "hidden" && (
             <>
-              <CategoryInput
-                id="hidden-category"
-                value={hiddenGemSearch.category}
+              <SearchPresetInput
+                id="hidden-preset"
+                value={hiddenGemSearch.presetId}
                 onChange={(value) =>
-                  updateHiddenGemSearch("category", value)
+                  updateHiddenGemSearch("presetId", value)
                 }
               />
 

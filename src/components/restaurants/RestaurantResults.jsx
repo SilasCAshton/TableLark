@@ -175,7 +175,7 @@ function RestaurantResults() {
 
   if (isLoading) {
     return (
-      <div className="restaurant-status">
+      <div className="restaurant-status" role="status">
         Searching nearby places...
       </div>
     );
@@ -195,7 +195,7 @@ function RestaurantResults() {
   if (!hasSearched) {
     return (
       <div className="restaurant-status">
-        Choose your filters and start a search.
+        Set your preferences, then search this area.
       </div>
     );
   }

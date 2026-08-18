@@ -1,10 +1,40 @@
 "use client";
 
-import { useState } from "react";
-import { Map } from "@vis.gl/react-google-maps";
+import { useEffect, useState } from "react";
+import { Map, useMap } from "@vis.gl/react-google-maps";
 
 import { useLocation } from "@/context/LocationContext";
 import RestaurantMarkers from "./restaurants/RestaurantMarkers";
+
+const MOBILE_MAP_QUERY = "(max-width: 720px)";
+
+function ResponsiveMapControls() {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const mobileQuery = window.matchMedia(MOBILE_MAP_QUERY);
+
+    function updateCameraControl() {
+      map.setOptions({
+        cameraControl: !mobileQuery.matches,
+      });
+    }
+
+    updateCameraControl();
+    mobileQuery.addEventListener("change", updateCameraControl);
+
+    return () => {
+      mobileQuery.removeEventListener("change", updateCameraControl);
+    };
+  }, [map]);
+
+  return null;
+}
+
 function RestaurantMap() {
   const { location } = useLocation();
   const [isMapReady, setIsMapReady] = useState(false);
@@ -22,7 +52,7 @@ function RestaurantMap() {
       {!isMapReady && (
         <div className="restaurant-map-loading" role="status">
           <span className="restaurant-map-loading__spinner" aria-hidden="true" />
-          <p>Finding your location...</p>
+          <p>Loading the map...</p>
         </div>
       )}
 
@@ -40,6 +70,7 @@ function RestaurantMap() {
           height: "100%",
         }}
       >
+        <ResponsiveMapControls />
         <RestaurantMarkers />
       </Map>
     </section>

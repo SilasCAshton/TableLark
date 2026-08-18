@@ -21,7 +21,7 @@
   position: fixed;
   z-index: 20;
   top: calc(var(--top-action-bar-height) + (var(--floating-panel-gap) * 2));
-  bottom: var(--floating-panel-gap);
+  bottom: calc(var(--floating-panel-gap) + var(--space-3));
   left: var(--floating-panel-gap);
   display: flex;
   width: min(var(--floating-panel-width), calc(100vw - (var(--floating-panel-gap) * 2)));
@@ -40,5 +40,10 @@
     right: var(--floating-panel-gap);
     width: auto;
     height: min(62dvh, 38rem);
+    transition: height var(--transition-normal);
+  }
+
+  .restaurant-sidebar--collapsed {
+    height: auto;
   }
 }
