@@ -20,11 +20,11 @@ export default function HomePage() {
         </header>
 
         <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Good food. Great company.</p>
-          <h1 id="home-title">Find a table worth talking about.</h1>
+          <p className="home-hero__eyebrow">Your next favorite place might be nearby</p>
+          <h1 id="home-title">Let's find somewhere worth going.</h1>
           <p className="home-hero__intro">
-            Discover memorable restaurants nearby and uncover the local spots
-            that make an ordinary night out feel special.
+            Whether you’re in the mood for a familiar favorite or 
+            somewhere you’ve never tried, finding the right table should feel simple.
           </p>
 
           <HomeRestaurantSearch />
@@ -32,23 +32,23 @@ export default function HomePage() {
       </section>
 
       <section className="home-story" aria-labelledby="home-story-title">
-        <p className="home-story__eyebrow">Beyond the usual</p>
+        <p className="home-story__eyebrow">Look beyond the usual</p>
         <h2 id="home-story-title">The best places are often the ones you almost miss.</h2>
         <p>
-          TableLark is built to shine a light on wonderful restaurants that sit
-          just off the beaten path: the neighborhood kitchen with a loyal
-          following, the tiny cafe tucked around the corner, and the family-run
-          spot your friends will still be talking about next week.
+          Great restaurants can be easy to miss, tucked into quiet neighborhoods, hidden 
+          behind modest storefronts, or buried several pages deep in a typical search. 
+          Small, well-loved places deserve to be seen, and we want to make it easier 
+          for people to discover and share them with others.
         </p>
         <p>
-          Our goal is to make finding those places simple, welcoming, and fun,
-          so you can spend less time deciding where to go and more time sharing
-          a great meal with the people you enjoy most.
+          TableLark is built to help you find somewhere you’ll genuinely want to go. 
+          Whether you’re looking for a well-known favorite or a small local café, 
+          we’ll help you explore your options and choose a place that feels right.
         </p>
         <div className="home-story__accent" aria-hidden="true">
           <span>Discover</span>
           <span>Gather</span>
-          <span>Enjoy</span>
+          <span>Share</span>
         </div>
       </section>
     </main>

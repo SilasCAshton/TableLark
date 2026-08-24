@@ -8,7 +8,7 @@
 .location-menu__panel { position: absolute; top: calc(100% + 0.65rem); right: 0; width: min(23rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - var(--top-action-bar-height) - 3rem); padding: var(--space-4); overflow-y: auto; color: var(--color-text); background: var(--color-panel-bg); border: 1px solid var(--color-panel-border); border-radius: var(--radius-medium); box-shadow: var(--shadow-medium); }
 .location-menu__panel p { margin: var(--space-3) 0 0; color: var(--color-muted-text); font-size: 0.82rem; }
 .location-controls input, .location-controls select, .location-controls button { width: 100%; min-height: 2.5rem; padding: 0.6rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-small); background: var(--color-surface); }
-.location-controls button { color: #fff; background: var(--color-primary); border-color: var(--color-primary); font-weight: 750; }
+.location-controls button { color: var(--color-text-on-dark); background: var(--color-primary); border-color: var(--color-primary); font-weight: 750; }
 .location-controls button:hover:not(:disabled) { background: var(--color-primary-hover); }
 .location-controls button:disabled { cursor: not-allowed; opacity: 0.6; }
 .location-address-input { display: grid; gap: var(--space-1); }

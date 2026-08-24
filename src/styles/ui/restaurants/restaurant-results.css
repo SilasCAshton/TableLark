@@ -2,15 +2,15 @@
 .restaurant-status { min-height: 0; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-surface); }
 .restaurant-results { display: flex; flex: 1 1 0; flex-direction: column; overflow: hidden; }
 .restaurant-status { flex: 1 1 auto; padding: var(--space-4); overflow-y: auto; color: var(--color-muted-text); }
-.restaurant-error { color: var(--color-error); border-color: color-mix(in srgb, var(--color-error) 45%, var(--color-border)); background: var(--color-error-bg); }
+.restaurant-error { color: var(--color-error); border-color: var(--color-error-border); background: var(--color-error-bg); }
 .restaurant-results-heading { display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; padding: 0.8rem var(--space-4); border-bottom: 1px solid var(--color-divider); }
 .restaurant-results-heading h2 { margin: 0; color: var(--color-heading); font-size: 1rem; }
 .restaurant-results-heading span { color: var(--color-muted-text); font-size: 0.8rem; }
 .restaurant-results-scroll { flex: 1 1 0; min-height: 0; padding: var(--space-3); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .restaurant-card-list { display: grid; gap: var(--space-3); }
-.restaurant-card { padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-card-bg); box-shadow: 0 2px 8px rgb(38 30 24 / 6%); transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast); }
+.restaurant-card { padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-card-bg); box-shadow: var(--shadow-card-resting); transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast); }
 .restaurant-card:hover { transform: translateY(-1px); background: var(--color-card-hover); box-shadow: var(--shadow-small); }
-.restaurant-card-selected { border-color: var(--color-card-selected-border); background: var(--color-card-selected); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 16%, transparent); }
+.restaurant-card-selected { border-color: var(--color-card-selected-border); background: var(--color-card-selected); box-shadow: 0 0 0 3px var(--color-card-selected-ring); }
 .restaurant-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
 .restaurant-card h3 { margin: 0; color: var(--color-heading); font-size: 1rem; line-height: 1.25; }
 .restaurant-type, .restaurant-address { color: var(--color-muted-text); font-size: 0.82rem; }
@@ -20,6 +20,6 @@
 .restaurant-details { display: flex; flex-wrap: wrap; gap: var(--space-2); font-size: 0.8rem; font-weight: 700; }
 .restaurant-card-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 .restaurant-card-actions button, .restaurant-card-actions a { min-height: 2.2rem; padding: 0.48rem 0.65rem; border-radius: var(--radius-small); font-size: 0.76rem; font-weight: 800; text-decoration: none; }
-.restaurant-card-actions button { color: #fff; background: var(--color-primary); border: 1px solid var(--color-primary); }
+.restaurant-card-actions button { color: var(--color-text-on-dark); background: var(--color-primary); border: 1px solid var(--color-primary); }
 .restaurant-card-actions a { color: var(--color-link); background: var(--color-surface-highlight); border: 1px solid var(--color-border); }
 .place-attributions { flex: 0 0 auto; padding: var(--space-2) var(--space-4); color: var(--color-muted-text); border-top: 1px solid var(--color-divider); font-size: 0.68rem; }

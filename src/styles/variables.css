@@ -23,13 +23,13 @@
    * Main layout sections
    */
   --color-topbar-bg: var(--color-deep-navy);
-  --color-topbar-text: #ffffff;
+  --color-topbar-text: var(--color-surface);
   --color-topbar-muted: #ffe6b0;
 
   --color-panel-bg: #fffaf4;
   --color-panel-border: #f1c89c;
 
-  --color-card-bg: #ffffff;
+  --color-card-bg: var(--color-surface);
   --color-card-hover: #fff4e7;
   --color-card-selected: #fff0bd;
   --color-card-selected-border: var(--color-coral);
@@ -41,7 +41,21 @@
   --color-text: #292d42;
   --color-muted-text: #676b7c;
   --color-subtle-text: #85899a;
-  --color-text-on-dark: #ffffff;
+  --color-text-on-dark: var(--color-surface);
+  --color-transparent: transparent;
+
+  /* Reusable translucent whites */
+  --color-white-alpha-12: rgb(255 255 255 / 12%);
+  --color-white-alpha-13: rgb(255 255 255 / 13%);
+  --color-white-alpha-20: rgb(255 255 255 / 20%);
+  --color-white-alpha-25: rgb(255 255 255 / 25%);
+  --color-white-alpha-30: rgb(255 255 255 / 30%);
+  --color-white-alpha-55: rgb(255 255 255 / 55%);
+  --color-white-alpha-64: rgb(255 255 255 / 64%);
+  --color-white-alpha-66: rgb(255 255 255 / 66%);
+  --color-white-alpha-68: rgb(255 255 255 / 68%);
+  --color-white-alpha-76: rgb(255 255 255 / 76%);
+  --color-white-alpha-88: rgb(255 255 255 / 88%);
 
   /*
    * Primary action colors
@@ -72,7 +86,7 @@
   /*
    * Inputs
    */
-  --color-input-bg: #ffffff;
+  --color-input-bg: var(--color-surface);
   --color-input-text: var(--color-deep-navy);
   --color-input-border: #e7bd91;
   --color-input-border-hover: var(--color-peach);
@@ -113,11 +127,36 @@
   --color-rating: #dc8d00;
   --color-price: #af4550;
 
+  /* Homepage palette and overlays */
+  --color-home-page-bg: #fffaf1;
+  --color-home-hero-bg: #38251d;
+  --color-home-hero-shade-start: rgb(21 18 24 / 82%);
+  --color-home-hero-shade-middle: rgb(25 20 22 / 57%);
+  --color-home-hero-shade-end: rgb(25 20 22 / 22%);
+  --color-home-hero-shade-bottom: rgb(22 17 17 / 62%);
+  --color-home-panel-bg: rgb(25 20 22 / 68%);
+  --color-home-message-bg: rgb(30 18 18 / 68%);
+  --color-home-eyebrow: #ffd497;
+  --color-home-button-bg: #ffd072;
+  --color-home-button-hover: #ffdc98;
+  --color-home-button-text: #27201e;
+  --color-home-story-eyebrow: #b6513d;
+  --color-home-story-heading: #24202b;
+  --color-home-story-text: #665e59;
+  --color-home-story-accent: #9c493b;
+  --color-home-story-divider: #e2af71;
+
+  /* Map provider content */
+  --color-map-info-text: #202124;
+
   /*
    * Focus styling
    */
   --color-focus: var(--color-coral);
   --focus-ring: 0 0 0 3px #ffd0c8;
+  --color-focus-outline: color-mix(in srgb, var(--color-focus) 65%, var(--color-transparent));
+  --color-error-border: color-mix(in srgb, var(--color-error) 45%, var(--color-border));
+  --color-card-selected-ring: color-mix(in srgb, var(--color-primary) 16%, var(--color-transparent));
 
   /*
    * Shadows
@@ -130,6 +169,8 @@
 
   --shadow-large:
     0 14px 36px rgb(26 29 46 / 20%);
+
+  --shadow-card-resting: 0 2px 8px rgb(38 30 24 / 6%);
 
   /*
    * Border radii

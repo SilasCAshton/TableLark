@@ -1,7 +1,7 @@
 .home-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #fffaf1;
+  background: var(--color-home-page-bg);
 }
 
 .home-hero {
@@ -10,8 +10,8 @@
   display: grid;
   min-height: min(82vh, 54rem);
   overflow: visible;
-  color: #fff;
-  background-color: #38251d;
+  color: var(--color-text-on-dark);
+  background-color: var(--color-home-hero-bg);
   background-image: url("/restaurant-hero-placeholder.svg");
   background-position: center;
   background-size: cover;
@@ -21,8 +21,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(21 18 24 / 82%) 0%, rgb(25 20 22 / 57%) 48%, rgb(25 20 22 / 22%) 100%),
-    linear-gradient(0deg, rgb(22 17 17 / 62%) 0%, transparent 46%);
+    linear-gradient(90deg, var(--color-home-hero-shade-start) 0%, var(--color-home-hero-shade-middle) 48%, var(--color-home-hero-shade-end) 100%),
+    linear-gradient(0deg, var(--color-home-hero-shade-bottom) 0%, var(--color-transparent) 46%);
 }
 
 .home-header,
@@ -49,7 +49,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  color: #fff;
+  color: var(--color-text-on-dark);
 }
 
 .home-logo__mark {
@@ -57,9 +57,9 @@
   width: 2.65rem;
   height: 2.65rem;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 66%);
+  border: 1px solid var(--color-white-alpha-66);
   border-radius: 50%;
-  background: rgb(255 255 255 / 13%);
+  background: var(--color-white-alpha-13);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -75,10 +75,10 @@
 
 .home-finder-link {
   padding: 0.55rem 1rem;
-  border: 1px solid rgb(255 255 255 / 55%);
+  border: 1px solid var(--color-white-alpha-55);
   border-radius: var(--radius-pill);
-  background: rgb(255 255 255 / 12%);
-  color: #fff;
+  background: var(--color-white-alpha-12);
+  color: var(--color-text-on-dark);
   font-size: 0.85rem;
   font-weight: 750;
   text-decoration: none;
@@ -91,8 +91,8 @@
 
 .home-finder-link:hover {
   transform: translateY(-1px);
-  border-color: #fff;
-  background: rgb(255 255 255 / 20%);
+  border-color: var(--color-text-on-dark);
+  background: var(--color-white-alpha-20);
 }
 
 .home-hero__content {
@@ -104,7 +104,7 @@
 .home-hero__eyebrow,
 .home-story__eyebrow {
   margin-bottom: 1rem;
-  color: #ffd497;
+  color: var(--color-home-eyebrow);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -117,7 +117,7 @@
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(3rem, 7vw, 6.75rem);
   font-weight: 500;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.01em;
   line-height: 0.96;
   text-wrap: balance;
 }
@@ -125,7 +125,7 @@
 .home-hero__intro {
   max-width: 38rem;
   margin-bottom: 2rem;
-  color: rgb(255 255 255 / 88%);
+  color: var(--color-white-alpha-88);
   font-size: clamp(1rem, 1.7vw, 1.25rem);
   line-height: 1.65;
 }
@@ -158,43 +158,43 @@
 }
 
 .home-button--primary {
-  background: #ffd072;
-  color: #27201e;
+  background: var(--color-home-button-bg);
+  color: var(--color-home-button-text);
 }
 
 .home-button--primary:hover {
-  background: #ffdc98;
+  background: var(--color-home-button-hover);
 }
 
 .home-button--secondary {
-  border-color: rgb(255 255 255 / 64%);
-  background: rgb(255 255 255 / 12%);
-  color: #fff;
+  border-color: var(--color-white-alpha-64);
+  background: var(--color-white-alpha-12);
+  color: var(--color-text-on-dark);
   backdrop-filter: blur(8px);
 }
 
 .home-button--secondary:hover {
-  border-color: #fff;
-  background: rgb(255 255 255 / 20%);
+  border-color: var(--color-text-on-dark);
+  background: var(--color-white-alpha-20);
 }
 
 .home-hero-search__message {
   max-width: 40rem;
   margin: 1rem 0 0;
   padding: 0.8rem 1rem;
-  border: 1px solid rgb(255 255 255 / 25%);
+  border: 1px solid var(--color-white-alpha-25);
   border-radius: 0.75rem;
-  background: rgb(30 18 18 / 68%);
-  color: #fff;
+  background: var(--color-home-message-bg);
+  color: var(--color-text-on-dark);
 }
 
 .home-hero-search__address-panel {
   max-width: 38rem;
   margin-top: 1.25rem;
   padding: 1.25rem;
-  border: 1px solid rgb(255 255 255 / 30%);
+  border: 1px solid var(--color-white-alpha-30);
   border-radius: 1rem;
-  background: rgb(25 20 22 / 68%);
+  background: var(--color-home-panel-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -202,13 +202,13 @@
   display: grid;
   gap: 0.2rem;
   margin-bottom: 0.8rem;
-  color: #fff;
+  color: var(--color-text-on-dark);
   font-weight: 750;
 }
 
 .home-hero-search__address-panel .location-address-input > label span,
 .home-hero-search__address-panel p {
-  color: rgb(255 255 255 / 76%);
+  color: var(--color-white-alpha-76);
   font-size: 0.85rem;
   font-weight: 400;
 }
@@ -227,17 +227,17 @@
 }
 
 .home-story__eyebrow {
-  color: #b6513d;
+  color: var(--color-home-story-eyebrow);
 }
 
 .home-story h2 {
   max-width: 18ch;
   margin: 0 auto 2rem;
-  color: #24202b;
+  color: var(--color-home-story-heading);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
 }
@@ -245,7 +245,7 @@
 .home-story > p:not(.home-story__eyebrow) {
   max-width: 47rem;
   margin: 0 auto 1.2rem;
-  color: #665e59;
+  color: var(--color-home-story-text);
   font-size: clamp(1rem, 1.6vw, 1.15rem);
   line-height: 1.8;
 }
@@ -255,7 +255,7 @@
   justify-content: center;
   gap: clamp(1.25rem, 5vw, 4.5rem);
   margin-top: 3rem;
-  color: #9c493b;
+  color: var(--color-home-story-accent);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1rem, 2vw, 1.25rem);
   font-style: italic;
@@ -263,7 +263,7 @@
 
 .home-story__accent span + span::before {
   margin-right: clamp(1.25rem, 5vw, 4.5rem);
-  color: #e2af71;
+  color: var(--color-home-story-divider);
   content: "•";
   font-style: normal;
 }

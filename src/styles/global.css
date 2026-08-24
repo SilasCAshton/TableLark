@@ -44,11 +44,11 @@ input:focus-visible,
 select:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--color-focus) 65%, transparent);
+  outline: 3px solid var(--color-focus-outline);
   outline-offset: 2px;
 }
 
 button { color: var(--color-text); }
 a { color: var(--color-link); }
 h1, h2, h3, p { margin-top: 0; }
-::selection { color: #fff; background: var(--color-primary); }
+::selection { color: var(--color-text-on-dark); background: var(--color-primary); }

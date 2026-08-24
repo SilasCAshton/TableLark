@@ -2,26 +2,30 @@
 
 TableLark is a React application for finding restaurants around a chosen location. It displays Google Places results in a searchable sidebar and on an interactive Google map.
 
+## Documentation
+
+- [Architecture and responsibility boundaries](docs/ARCHITECTURE.md) explains the frontend, backend, Google Maps Platform integration, API contract, search algorithms, and UML diagrams.
+- [Ideas backlog](IDEAS.md) records potential features that are not yet committed for implementation.
+
 ## How it works
 
-The application starts with a default search location and lets the user replace it in three ways:
+The Finder starts in New Orleans by default and lets the user replace that location in two ways:
 
 - Select an address with Google Places autocomplete.
-- Enter latitude and longitude coordinates.
 - Grant the browser access to the current device location.
 
-The restaurant search supports three modes:
+The restaurant search supports two modes:
 
-- **Nearby** ranks places by distance.
-- **Popular** ranks places by popularity and can enforce a minimum rating.
+- **Popular** asks Google Places for a popularity-ranked result set and can enforce a minimum rating.
 - **Hidden gems** filters for highly rated restaurants within a configurable review-count range. The server can subdivide the search area and make multiple bounded Google Places requests to find more candidates before scoring and deduplicating them.
 
-Users can also choose a restaurant category and a search radius from 1 to 20 miles. Selecting a result centers the map on that restaurant and opens a summary window. Links to the corresponding Google Maps listing are included when Google supplies them.
+Users can also choose a built-in category preset and a search radius from 1 to 20 miles. Selecting a result centers the map on that restaurant and opens a summary window. Links to the corresponding Google Maps listing are included when Google supplies them.
 
 ### Application structure
 
-- `src/app/layout.jsx` defines the root document, metadata, global styles, and provider boundary.
-- `src/app/page.jsx` defines the home route and composes the map, action bar, and results panel.
+- `src/app/layout.jsx` defines the root document, metadata, and global styles.
+- `src/app/page.jsx` defines the homepage and its Finder navigation, current-location, and address-search entry points.
+- `src/app/finder/page.jsx` composes the interactive map, action bar, location controls, discovery panel, and provider boundary.
 - `src/app/providers.jsx` configures the client-side Google Maps API provider and application contexts.
 - `src/app/globals.css` is the global stylesheet entrypoint used by the root layout.
 - `src/app/api/restaurants/search/route.js` validates restaurant requests, applies basic rate limiting, invokes the server search, and returns normalized JSON.
@@ -103,7 +107,7 @@ Then manually verify the behavior that depends on Google Maps and browser APIs:
 1. Confirm the map loads without Google API errors.
 2. Set the location using an address, coordinates, and current location.
 3. Confirm missing or invalid server configuration produces a safe error message rather than exposing credentials or Google response details.
-4. Run Nearby, Popular, and Hidden gems searches with multiple radii and categories.
+4. Run Popular and Hidden gems searches with multiple radii and category presets.
 5. Confirm result cards, markers, map centering, information windows, and Google Maps links correspond to the selected restaurant.
 6. Check empty, loading, rate-limit, and error states, including denied location permission.
 7. Check both desktop and narrow mobile layouts.
