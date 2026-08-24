@@ -9,8 +9,8 @@ import {
 const LocationContext = createContext();
 
 const DEFAULT_LOCATION = {
-  lat: 40.2973,
-  lng: -75.0616,
+  lat: 29.9511,
+  lng: -90.0715,
   radiusMeters: 8047,
 };
 

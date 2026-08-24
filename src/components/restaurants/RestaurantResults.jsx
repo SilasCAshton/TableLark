@@ -17,7 +17,9 @@ function RestaurantCard({ restaurant }) {
   const {
     selectedRestaurantId,
     selectRestaurant,
-    searchMode,
+    minRating,
+    minReviews,
+    maxReviews,
   } = useRestaurantSearch();
 
   const isSelected =
@@ -26,6 +28,13 @@ function RestaurantCard({ restaurant }) {
   const priceLabel = formatPriceLevel(
     restaurant.priceLevel,
   );
+
+  const isHiddenGem =
+    restaurant.rating !== null &&
+    restaurant.rating >= minRating &&
+    restaurant.reviewCount !== null &&
+    restaurant.reviewCount >= minReviews &&
+    restaurant.reviewCount <= maxReviews;
 
   return (
     <article
@@ -46,7 +55,7 @@ function RestaurantCard({ restaurant }) {
           )}
         </div>
 
-        {searchMode === "hidden" && (
+        {isHiddenGem && (
           <span className="hidden-gem-label">
             Hidden gem
           </span>

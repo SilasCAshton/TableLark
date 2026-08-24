@@ -12,39 +12,19 @@ import { DEFAULT_RESTAURANT_SEARCH_PRESET_ID } from "@/lib/restaurants/search-pr
 
 const RestaurantSearchContext = createContext(null);
 
-const DEFAULT_NEARBY_SEARCH = {
-  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
-  maxResults: 20,
-};
-
-const DEFAULT_POPULAR_SEARCH = {
-  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
-  minRating: 4,
-  maxResults: 20,
-};
-
-const DEFAULT_HIDDEN_GEM_SEARCH = {
-  presetId: DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
-  minRating: 4,
-  minReviews: 10,
-  maxReviews: 300,
-  maxResults: 20,
-};
+const DEFAULT_MIN_RATING = 4;
+const DEFAULT_MIN_REVIEWS = 10;
+const DEFAULT_MAX_REVIEWS = 300;
+const MAX_RESULTS = 20;
 
 export function RestaurantSearchProvider({ children }) {
-  const [searchMode, setSearchMode] = useState("nearby");
-
-  const [nearbySearch, setNearbySearch] = useState(
-    DEFAULT_NEARBY_SEARCH,
+  const [searchMode, setSearchMode] = useState("popular");
+  const [cuisinePresetId, setCuisinePresetId] = useState(
+    DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   );
-
-  const [popularSearch, setPopularSearch] = useState(
-    DEFAULT_POPULAR_SEARCH,
-  );
-
-  const [hiddenGemSearch, setHiddenGemSearch] = useState(
-    DEFAULT_HIDDEN_GEM_SEARCH,
-  );
+  const [minRating, setMinRating] = useState(DEFAULT_MIN_RATING);
+  const [minReviews, setMinReviews] = useState(DEFAULT_MIN_REVIEWS);
+  const [maxReviews, setMaxReviews] = useState(DEFAULT_MAX_REVIEWS);
 
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurantId, setSelectedRestaurantId] =
@@ -53,74 +33,16 @@ export function RestaurantSearchProvider({ children }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
 
-  const updateNearbySearch = useCallback((name, value) => {
-    setNearbySearch((previousSearch) => ({
-      ...previousSearch,
-      [name]: value,
-    }));
-  }, []);
-
-  const updatePopularSearch = useCallback((name, value) => {
-    setPopularSearch((previousSearch) => ({
-      ...previousSearch,
-      [name]: value,
-    }));
-  }, []);
-
-  const updateHiddenGemSearch = useCallback((name, value) => {
-    setHiddenGemSearch((previousSearch) => ({
-      ...previousSearch,
-      [name]: value,
-    }));
-  }, []);
-
-  const resetNearbySearch = useCallback(() => {
-    setNearbySearch(DEFAULT_NEARBY_SEARCH);
-  }, []);
-
-  const resetPopularSearch = useCallback(() => {
-    setPopularSearch(DEFAULT_POPULAR_SEARCH);
-  }, []);
-
-  const resetHiddenGemSearch = useCallback(() => {
-    setHiddenGemSearch(DEFAULT_HIDDEN_GEM_SEARCH);
-  }, []);
-
-  const resetActiveSearch = useCallback(() => {
-    if (searchMode === "nearby") {
-      resetNearbySearch();
-      return;
-    }
-
-    if (searchMode === "popular") {
-      resetPopularSearch();
-      return;
-    }
-
-    resetHiddenGemSearch();
-  }, [
-    searchMode,
-    resetNearbySearch,
-    resetPopularSearch,
-    resetHiddenGemSearch,
-  ]);
-
-  const activeSearch = useMemo(() => {
-    if (searchMode === "popular") {
-      return popularSearch;
-    }
-
-    if (searchMode === "hidden") {
-      return hiddenGemSearch;
-    }
-
-    return nearbySearch;
-  }, [
-    searchMode,
-    nearbySearch,
-    popularSearch,
-    hiddenGemSearch,
-  ]);
+  const searchFilters = useMemo(
+    () => ({
+      presetId: cuisinePresetId,
+      minRating,
+      minReviews,
+      maxReviews,
+      maxResults: MAX_RESULTS,
+    }),
+    [cuisinePresetId, minRating, minReviews, maxReviews],
+  );
 
   const selectedRestaurant = useMemo(
     () =>
@@ -178,21 +100,15 @@ export function RestaurantSearchProvider({ children }) {
       value={{
         searchMode,
         setSearchMode,
-        activeSearch,
-
-        nearbySearch,
-        updateNearbySearch,
-        resetNearbySearch,
-
-        popularSearch,
-        updatePopularSearch,
-        resetPopularSearch,
-
-        hiddenGemSearch,
-        updateHiddenGemSearch,
-        resetHiddenGemSearch,
-
-        resetActiveSearch,
+        cuisinePresetId,
+        setCuisinePresetId,
+        minRating,
+        setMinRating,
+        minReviews,
+        setMinReviews,
+        maxReviews,
+        setMaxReviews,
+        searchFilters,
 
         restaurants,
         selectedRestaurantId,

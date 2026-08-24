@@ -6,8 +6,8 @@ import {
   validateRestaurantSearch,
 } from "../../src/lib/restaurants/validation.js";
 
-const validNearbySearch = {
-  mode: "nearby",
+const validPopularSearch = {
+  mode: "popular",
   center: {
     lat: 40.2973,
     lng: -75.0616,
@@ -15,26 +15,55 @@ const validNearbySearch = {
   radiusMeters: 8047,
   filters: {
     presetId: "all",
+    minRating: 4,
     maxResults: 20,
   },
 };
 
-test("validates and normalizes a nearby search", () => {
-  const search = validateRestaurantSearch(validNearbySearch);
+test("validates and normalizes a popular search", () => {
+  const search = validateRestaurantSearch(validPopularSearch);
 
   assert.equal(search.filters.presetId, "all");
-  assert.deepEqual(search.filters.includedPrimaryTypes, [
-    "restaurant",
-  ]);
+  assert.ok(
+    search.filters.includedPrimaryTypes.includes("restaurant"),
+  );
+  assert.ok(search.filters.includedPrimaryTypes.includes("cafe"));
+  assert.equal(search.filters.includedTypes, undefined);
+  assert.equal(search.filters.minRating, 4);
   assert.equal(search.filters.maxResults, 20);
+});
+
+test("ignores review-count filters for a popular search", () => {
+  const search = validateRestaurantSearch({
+    ...validPopularSearch,
+    filters: {
+      ...validPopularSearch.filters,
+      minReviews: 500,
+      maxReviews: 100,
+    },
+  });
+
+  assert.equal(search.filters.minReviews, undefined);
+  assert.equal(search.filters.maxReviews, undefined);
+});
+
+test("rejects search modes outside the current UI model", () => {
+  assert.throws(
+    () =>
+      validateRestaurantSearch({
+        ...validPopularSearch,
+        mode: "nearby",
+      }),
+    /Search mode must be popular or hidden/,
+  );
 });
 
 test("validates hidden-gem filters", () => {
   const search = validateRestaurantSearch({
-    ...validNearbySearch,
+    ...validPopularSearch,
     mode: "hidden",
     filters: {
-      ...validNearbySearch.filters,
+      ...validPopularSearch.filters,
       minRating: 4.2,
       minReviews: 20,
       maxReviews: 250,
@@ -48,9 +77,9 @@ test("validates hidden-gem filters", () => {
 
 test("resolves a cuisine preset to trusted Google types", () => {
   const search = validateRestaurantSearch({
-    ...validNearbySearch,
+    ...validPopularSearch,
     filters: {
-      ...validNearbySearch.filters,
+      ...validPopularSearch.filters,
       presetId: "asian",
     },
   });
@@ -71,9 +100,9 @@ test("rejects unsupported search presets", () => {
   assert.throws(
     () =>
       validateRestaurantSearch({
-        ...validNearbySearch,
+        ...validPopularSearch,
         filters: {
-          ...validNearbySearch.filters,
+          ...validPopularSearch.filters,
           presetId: "anything",
         },
       }),
@@ -85,9 +114,9 @@ test("rejects coordinates outside their valid range", () => {
   assert.throws(
     () =>
       validateRestaurantSearch({
-        ...validNearbySearch,
+        ...validPopularSearch,
         center: {
-          ...validNearbySearch.center,
+          ...validPopularSearch.center,
           lat: 91,
         },
       }),
@@ -99,10 +128,10 @@ test("rejects inverted hidden-gem review limits", () => {
   assert.throws(
     () =>
       validateRestaurantSearch({
-        ...validNearbySearch,
+        ...validPopularSearch,
         mode: "hidden",
         filters: {
-          ...validNearbySearch.filters,
+          ...validPopularSearch.filters,
           minRating: 4,
           minReviews: 500,
           maxReviews: 100,

@@ -14,6 +14,7 @@ async function searchSingleArea(search, signal) {
   const restaurants = await searchNearbyPlaces({
     center: search.center,
     radiusMeters: search.radiusMeters,
+    includedTypes: search.filters.includedTypes,
     includedPrimaryTypes: search.filters.includedPrimaryTypes,
     maxResults: search.filters.maxResults,
     rankPreference:
@@ -51,6 +52,7 @@ async function searchHiddenGems(search, signal) {
     const restaurants = await searchNearbyPlaces({
       center,
       radiusMeters,
+      includedTypes: search.filters.includedTypes,
       includedPrimaryTypes: search.filters.includedPrimaryTypes,
       maxResults: search.filters.maxResults,
       rankPreference: "DISTANCE",

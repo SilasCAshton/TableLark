@@ -9,7 +9,7 @@ export function useRestaurantSearchRequest() {
   const { location } = useLocation();
   const {
     searchMode,
-    activeSearch,
+    searchFilters,
     beginSearch,
     completeSearch,
     failSearch,
@@ -57,7 +57,7 @@ export function useRestaurantSearchRequest() {
               lng: location.lng,
             },
             radiusMeters: location.radiusMeters,
-            filters: activeSearch,
+            filters: searchFilters,
           }),
           signal: controller.signal,
         },
@@ -97,7 +97,7 @@ export function useRestaurantSearchRequest() {
     location.lng,
     location.radiusMeters,
     searchMode,
-    activeSearch,
+    searchFilters,
     beginSearch,
     completeSearch,
     failSearch,

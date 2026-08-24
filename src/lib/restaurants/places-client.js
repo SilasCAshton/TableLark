@@ -15,6 +15,7 @@ const PLACE_FIELD_MASK = [
   "places.priceLevel",
   "places.primaryType",
   "places.primaryTypeDisplayName",
+  "places.iconMaskBaseUri",
   "places.googleMapsUri",
   "places.attributions",
 ].join(",");
@@ -31,6 +32,7 @@ export class PlacesServiceError extends Error {
 export async function searchNearbyPlaces({
   center,
   radiusMeters,
+  includedTypes,
   includedPrimaryTypes,
   maxResults,
   rankPreference,
@@ -65,6 +67,7 @@ export async function searchNearbyPlaces({
       body: JSON.stringify({
         languageCode: "en",
         regionCode: "US",
+        includedTypes,
         includedPrimaryTypes,
         maxResultCount: maxResults,
         rankPreference,

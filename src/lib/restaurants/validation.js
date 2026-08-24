@@ -1,6 +1,6 @@
 import { getRestaurantSearchPreset } from "./search-presets.js";
 
-const SEARCH_MODES = new Set(["nearby", "popular", "hidden"]);
+const SEARCH_MODES = new Set(["popular", "hidden"]);
 
 export class SearchValidationError extends Error {}
 
@@ -69,7 +69,7 @@ export function validateRestaurantSearch(payload) {
 
   if (!SEARCH_MODES.has(mode)) {
     throw new SearchValidationError(
-      "Search mode must be nearby, popular, or hidden.",
+      "Search mode must be popular or hidden.",
     );
   }
 
@@ -122,7 +122,14 @@ export function validateRestaurantSearch(payload) {
     ),
     filters: {
       presetId,
-      includedPrimaryTypes: [...preset.includedPrimaryTypes],
+      ...(preset.includedTypes.length > 0 && {
+        includedTypes: [...preset.includedTypes],
+      }),
+      ...(preset.includedPrimaryTypes.length > 0 && {
+        includedPrimaryTypes: [
+          ...preset.includedPrimaryTypes,
+        ],
+      }),
       maxResults: readIntegerInRange(
         filters.maxResults ?? 20,
         "Maximum results",

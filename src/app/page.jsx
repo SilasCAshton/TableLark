@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HomeRestaurantSearch from "@/components/home/HomeRestaurantSearch";
 
 export default function HomePage() {
@@ -7,9 +8,14 @@ export default function HomePage() {
         <div className="home-hero__shade" />
 
         <header className="home-header">
-          <div className="home-logo" aria-label="TableLark home">
-            <span className="home-logo__mark" aria-hidden="true">TL</span>
-            <span className="home-logo__name">TableLark</span>
+          <div className="home-header__nav">
+            <div className="home-logo" aria-label="TableLark home">
+              <span className="home-logo__mark" aria-hidden="true">TL</span>
+              <span className="home-logo__name">TableLark</span>
+            </div>
+            <Link className="home-finder-link" href="/finder">
+              Finder
+            </Link>
           </div>
         </header>
 

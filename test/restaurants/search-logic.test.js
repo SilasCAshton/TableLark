@@ -27,6 +27,8 @@ test("normalizes a Places API restaurant", () => {
     priceLevel: "PRICE_LEVEL_MODERATE",
     primaryType: "restaurant",
     primaryTypeDisplayName: { text: "Restaurant" },
+    iconMaskBaseUri:
+      "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
     googleMapsUri: "https://maps.google.com/example",
     attributions: [
       {
@@ -38,6 +40,10 @@ test("normalizes a Places API restaurant", () => {
 
   assert.equal(restaurant.name, "Test Kitchen");
   assert.equal(restaurant.priceLevel, "MODERATE");
+  assert.equal(
+    restaurant.iconMaskBaseURI,
+    "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+  );
   assert.deepEqual(restaurant.location, {
     lat: 40.1,
     lng: -75.2,

@@ -11,7 +11,18 @@
 .location-controls button { color: #fff; background: var(--color-primary); border-color: var(--color-primary); font-weight: 750; }
 .location-controls button:hover:not(:disabled) { background: var(--color-primary-hover); }
 .location-controls button:disabled { cursor: not-allowed; opacity: 0.6; }
-.location-controls gmp-place-autocomplete { display: block; width: 100%; }
+.location-address-input { display: grid; gap: var(--space-1); }
+.location-address-input > label { color: var(--color-muted-text); font-size: 0.76rem; font-weight: 750; }
+.location-address-input > label span { display: block; font-weight: 400; }
+.location-address-input > input { width: 100%; min-height: 2.5rem; padding: 0.6rem 0.75rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-small); }
+.location-address-suggestions-shell { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-small); background: var(--color-surface); box-shadow: var(--shadow-medium); }
+.location-address-suggestions { display: grid; max-height: min(16rem, 38dvh); margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.location-address-suggestions li + li { border-top: 1px solid var(--color-divider); }
+.location-address-input .location-address-suggestion { display: grid; gap: 0.1rem; width: 100%; min-height: 0; padding: 0.65rem 0.75rem; color: var(--color-text); background: var(--color-surface); border: 0; border-radius: 0; text-align: left; }
+.location-address-input .location-address-suggestion:hover, .location-address-input .location-address-suggestion[aria-selected="true"] { color: var(--color-text); background: var(--color-card-hover); }
+.location-address-suggestion span { overflow: hidden; font-size: 0.84rem; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.location-address-suggestion small { overflow: hidden; color: var(--color-muted-text); font-size: 0.72rem; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.location-address-attribution { padding: 0.3rem 0.6rem; color: var(--color-subtle-text); border-top: 1px solid var(--color-divider); font-size: 0.62rem; font-weight: 700; text-align: right; }
 .location-method-divider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; color: var(--color-subtle-text); font-size: 0.72rem; font-weight: 700; text-transform: lowercase; }
 .location-method-divider::before, .location-method-divider::after { flex: 1; height: 1px; background: var(--color-divider); content: ""; }
 

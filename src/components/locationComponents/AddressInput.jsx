@@ -3,148 +3,281 @@
 import { useEffect, useRef, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 
-function AddressInput({ processLatitudeAndLongitude }) {
+const MINIMUM_QUERY_LENGTH = 3;
+const AUTOCOMPLETE_DELAY_MS = 250;
+
+function AddressInput({
+  processLatitudeAndLongitude,
+  label = "Search by address",
+  labelDescription = "",
+  placeholder = "Enter another address",
+  showSelectedAddress = true,
+}) {
   const placesLibrary = useMapsLibrary("places");
-
-  const autocompleteContainerRef = useRef(null);
   const processLocationRef = useRef(processLatitudeAndLongitude);
+  const sessionTokenRef = useRef(null);
+  const requestSequenceRef = useRef(0);
 
+  const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] =
+    useState(-1);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  /*
-   * Keep a reference to the newest version of the parent's
-   * processLatitudeAndLongitude function.
-   *
-   * This prevents us from having to rebuild the autocomplete
-   * widget every time SearchControls renders.
-   */
 
   useEffect(() => {
     processLocationRef.current = processLatitudeAndLongitude;
   }, [processLatitudeAndLongitude]);
 
   useEffect(() => {
-    if (!placesLibrary || !autocompleteContainerRef.current) {
-      return;
+    const query = inputValue.trim();
+    const requestId = ++requestSequenceRef.current;
+
+    if (
+      !placesLibrary ||
+      query.length < MINIMUM_QUERY_LENGTH ||
+      (selectedAddress && inputValue === selectedAddress)
+    ) {
+      setSuggestions([]);
+      setActiveSuggestionIndex(-1);
+      setIsLoading(false);
+      return undefined;
     }
 
-    const container = autocompleteContainerRef.current;
-
-    /*
-     * Google provides this input element.
-     * It includes both the text input and suggestion dropdown.
-     */
-    const autocomplete =
-      new placesLibrary.PlaceAutocompleteElement();
-
-    autocomplete.placeholder = "Enter another address";
-    autocomplete.description = "Search for an address";
-    autocomplete.style.width = "100%";
-
-    /*
-     * Optional: restrict suggestions to the United States.
-     *
-     * Leave this commented out if your app should support
-     * addresses worldwide.
-     */
-    // autocomplete.includedRegionCodes = ["us"];
-
-    async function handlePlaceSelect(event) {
-      setError("");
-      setSelectedAddress("");
+    const timeoutId = window.setTimeout(async () => {
       setIsLoading(true);
 
       try {
-        /*
-         * The selected autocomplete prediction first needs to
-         * be converted into a complete Place object.
-         */
-        const place = event.placePrediction.toPlace();
+        if (!sessionTokenRef.current) {
+          sessionTokenRef.current =
+            new placesLibrary.AutocompleteSessionToken();
+        }
 
-        /*
-         * Request only the fields this application needs.
-         */
-        await place.fetchFields({
-          fields: ["formattedAddress", "location"],
-        });
+        const { suggestions: nextSuggestions } =
+          await placesLibrary.AutocompleteSuggestion
+            .fetchAutocompleteSuggestions({
+              input: query,
+              sessionToken: sessionTokenRef.current,
+            });
 
-        if (!place.location) {
-          setError(
-            "Google found the address but did not return coordinates."
-          );
+        if (requestSequenceRef.current !== requestId) {
           return;
         }
 
-        /*
-         * place.location is a Google LatLng object.
-         * lat() and lng() extract the numeric coordinates.
-         */
-        const lat = place.location.lat();
-        const lng = place.location.lng();
-
-        /*
-         * Pass the new coordinates directly into the processing
-         * function so it can update LocationContext immediately.
-         */
-        processLocationRef.current(lat, lng);
-
-        setSelectedAddress(
-          place.formattedAddress ?? "Address selected"
+        setSuggestions(
+          nextSuggestions
+            .map((suggestion) => suggestion.placePrediction)
+            .filter(Boolean),
         );
-      } catch (error) {
-        console.error("Autocomplete selection failed:", error);
+        setActiveSuggestionIndex(-1);
+        setError("");
+      } catch (requestError) {
+        if (requestSequenceRef.current !== requestId) {
+          return;
+        }
 
+        console.error(
+          "Address autocomplete failed:",
+          requestError,
+        );
+        setSuggestions([]);
         setError(
-          "The selected address could not be converted into coordinates."
+          "Address suggestions are unavailable. Please try again.",
         );
       } finally {
-        setIsLoading(false);
+        if (requestSequenceRef.current === requestId) {
+          setIsLoading(false);
+        }
       }
-    }
+    }, AUTOCOMPLETE_DELAY_MS);
 
-    /*
-     * gmp-select fires when the user chooses one of the
-     * autocomplete suggestions.
-     */
-    autocomplete.addEventListener(
-      "gmp-select",
-      handlePlaceSelect
-    );
-
-    /*
-     * Insert Google's autocomplete element into the React div.
-     * replaceChildren also prevents duplicate inputs in
-     * React Strict Mode.
-     */
-    container.replaceChildren(autocomplete);
-
-    /*
-     * Remove the listener and widget when this component
-     * is unmounted.
-     */
     return () => {
-      autocomplete.removeEventListener(
-        "gmp-select",
-        handlePlaceSelect
-      );
+      window.clearTimeout(timeoutId);
 
-      if (container.contains(autocomplete)) {
-        container.removeChild(autocomplete);
+      if (requestSequenceRef.current === requestId) {
+        requestSequenceRef.current += 1;
       }
     };
-  }, [placesLibrary]);
+  }, [inputValue, placesLibrary, selectedAddress]);
+
+  async function selectPrediction(prediction) {
+    setError("");
+    setSelectedAddress("");
+    setSuggestions([]);
+    setActiveSuggestionIndex(-1);
+    setIsLoading(true);
+
+    try {
+      const place = prediction.toPlace();
+
+      await place.fetchFields({
+        fields: ["formattedAddress", "location"],
+      });
+
+      if (!place.location) {
+        setError(
+          "Google found the address but did not return coordinates.",
+        );
+        return;
+      }
+
+      const formattedAddress =
+        place.formattedAddress ?? prediction.text.toString();
+
+      processLocationRef.current(
+        place.location.lat(),
+        place.location.lng(),
+      );
+      setInputValue(formattedAddress);
+      setSelectedAddress(formattedAddress);
+    } catch (selectionError) {
+      console.error(
+        "Autocomplete selection failed:",
+        selectionError,
+      );
+      setError(
+        "The selected address could not be converted into coordinates.",
+      );
+    } finally {
+      sessionTokenRef.current = null;
+      setIsLoading(false);
+    }
+  }
+
+  function handleInputChange(event) {
+    setInputValue(event.target.value);
+    setSelectedAddress("");
+    setError("");
+  }
+
+  function handleKeyDown(event) {
+    if (suggestions.length === 0) {
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveSuggestionIndex((currentIndex) =>
+        currentIndex >= suggestions.length - 1
+          ? 0
+          : currentIndex + 1,
+      );
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveSuggestionIndex((currentIndex) =>
+        currentIndex <= 0
+          ? suggestions.length - 1
+          : currentIndex - 1,
+      );
+      return;
+    }
+
+    if (event.key === "Enter" && activeSuggestionIndex >= 0) {
+      event.preventDefault();
+      void selectPrediction(suggestions[activeSuggestionIndex]);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      setSuggestions([]);
+      setActiveSuggestionIndex(-1);
+    }
+  }
+
+  function handleBlur(event) {
+    if (event.currentTarget.contains(event.relatedTarget)) {
+      return;
+    }
+
+    setSuggestions([]);
+    setActiveSuggestionIndex(-1);
+  }
+
+  const hasSuggestions = suggestions.length > 0;
 
   return (
-    <div className="location-address-input">
-      <div ref={autocompleteContainerRef} />
+    <div className="location-address-input" onBlur={handleBlur}>
+      <label htmlFor="location-address-search">
+        {label}
 
-      {!placesLibrary && <p role="status">Loading address search...</p>}
+        {labelDescription && <span>{labelDescription}</span>}
+      </label>
 
-      {isLoading && <p>Getting coordinates...</p>}
+      <input
+        id="location-address-search"
+        type="search"
+        value={inputValue}
+        placeholder={placeholder}
+        autoComplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded={hasSuggestions}
+        aria-controls="location-address-suggestions"
+        aria-activedescendant={
+          activeSuggestionIndex >= 0
+            ? `location-address-suggestion-${activeSuggestionIndex}`
+            : undefined
+        }
+        disabled={!placesLibrary}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+      />
 
-      {selectedAddress && (
+      {hasSuggestions && (
+        <div className="location-address-suggestions-shell">
+          <ul
+            id="location-address-suggestions"
+            className="location-address-suggestions"
+            role="listbox"
+          >
+            {suggestions.map((prediction, index) => {
+              const mainText =
+                prediction.mainText?.toString() ??
+                prediction.text.toString();
+              const secondaryText =
+                prediction.secondaryText?.toString();
+
+              return (
+                <li
+                  key={prediction.placeId}
+                  role="none"
+                >
+                  <button
+                    id={`location-address-suggestion-${index}`}
+                    className="location-address-suggestion"
+                    type="button"
+                    role="option"
+                    aria-selected={index === activeSuggestionIndex}
+                    onClick={() => void selectPrediction(prediction)}
+                  >
+                    <span>{mainText}</span>
+
+                    {secondaryText && (
+                      <small>{secondaryText}</small>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="location-address-attribution">
+            Powered by Google
+          </div>
+        </div>
+      )}
+
+      {!placesLibrary && (
+        <p role="status">Loading address search...</p>
+      )}
+
+      {isLoading && <p role="status">Searching addresses...</p>}
+
+      {showSelectedAddress && selectedAddress && (
         <p>
           Selected address: <strong>{selectedAddress}</strong>
         </p>

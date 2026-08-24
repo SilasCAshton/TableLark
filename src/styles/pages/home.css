@@ -38,6 +38,13 @@
   padding-block: 1.75rem;
 }
 
+.home-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .home-logo {
   display: inline-flex;
   align-items: center;
@@ -64,6 +71,28 @@
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: 0.01em;
+}
+
+.home-finder-link {
+  padding: 0.55rem 1rem;
+  border: 1px solid rgb(255 255 255 / 55%);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 750;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.home-finder-link:hover {
+  transform: translateY(-1px);
+  border-color: #fff;
+  background: rgb(255 255 255 / 20%);
 }
 
 .home-hero__content {
@@ -169,7 +198,7 @@
   backdrop-filter: blur(12px);
 }
 
-.home-hero-search__address-label {
+.home-hero-search__address-panel .location-address-input > label {
   display: grid;
   gap: 0.2rem;
   margin-bottom: 0.8rem;
@@ -177,16 +206,11 @@
   font-weight: 750;
 }
 
-.home-hero-search__address-label span,
+.home-hero-search__address-panel .location-address-input > label span,
 .home-hero-search__address-panel p {
   color: rgb(255 255 255 / 76%);
   font-size: 0.85rem;
   font-weight: 400;
-}
-
-.home-hero-search__address-panel gmp-place-autocomplete {
-  display: block;
-  width: 100%;
 }
 
 .home-hero-search__address-panel p {

@@ -89,6 +89,7 @@ export function normalizePlace(place) {
     primaryType: place.primaryType ?? null,
     primaryTypeDisplayName:
       place.primaryTypeDisplayName?.text ?? null,
+    iconMaskBaseURI: place.iconMaskBaseUri ?? null,
     googleMapsURI: place.googleMapsUri ?? null,
     attributions: (place.attributions ?? []).map(
       (attribution) => ({

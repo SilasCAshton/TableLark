@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  APIProvider,
-  useMapsLibrary,
-} from "@vis.gl/react-google-maps";
+import { APIProvider } from "@vis.gl/react-google-maps";
+
+import AddressInput from "@/components/locationComponents/AddressInput";
 
 function buildFinderUrl(lat, lng) {
   const searchParams = new URLSearchParams({
@@ -18,68 +17,18 @@ function buildFinderUrl(lat, lng) {
 
 function AddressAutocomplete() {
   const router = useRouter();
-  const placesLibrary = useMapsLibrary("places");
-  const containerRef = useRef(null);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    if (!placesLibrary || !containerRef.current) {
-      return;
-    }
-
-    const container = containerRef.current;
-    const autocomplete = new placesLibrary.PlaceAutocompleteElement();
-
-    autocomplete.placeholder = "Start typing an address...";
-    autocomplete.description = "Search for a starting address";
-    autocomplete.style.width = "100%";
-
-    async function handlePlaceSelect(event) {
-      setMessage("Opening the restaurant finder...");
-
-      try {
-        const place = event.placePrediction.toPlace();
-
-        await place.fetchFields({ fields: ["location"] });
-
-        if (!place.location) {
-          setMessage("That address did not include a usable location.");
-          return;
-        }
-
-        router.push(
-          buildFinderUrl(
-            place.location.lat(),
-            place.location.lng(),
-          ),
-        );
-      } catch (error) {
-        console.error("Home address selection failed:", error);
-        setMessage("That address could not be opened. Please try again.");
-      }
-    }
-
-    autocomplete.addEventListener("gmp-select", handlePlaceSelect);
-    container.replaceChildren(autocomplete);
-
-    return () => {
-      autocomplete.removeEventListener("gmp-select", handlePlaceSelect);
-
-      if (container.contains(autocomplete)) {
-        container.removeChild(autocomplete);
-      }
-    };
-  }, [placesLibrary, router]);
 
   return (
     <div className="home-hero-search__address-panel">
-      <label className="home-hero-search__address-label">
-        Enter an address
-        <span>Choose one of Google&apos;s suggestions to continue.</span>
-      </label>
-      <div ref={containerRef} />
-      {!placesLibrary && <p role="status">Loading address search...</p>}
-      {message && <p role="status">{message}</p>}
+      <AddressInput
+        label="Enter an address"
+        labelDescription="Choose one of Google's suggestions to continue."
+        placeholder="Start typing an address..."
+        showSelectedAddress={false}
+        processLatitudeAndLongitude={(lat, lng) =>
+          router.push(buildFinderUrl(lat, lng))
+        }
+      />
     </div>
   );
 }

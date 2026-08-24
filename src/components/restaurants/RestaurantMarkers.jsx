@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import {
   AdvancedMarker,
   InfoWindow,
+  Pin,
   useMap,
 } from "@vis.gl/react-google-maps";
 
@@ -67,25 +68,49 @@ function RestaurantMarkers() {
 
       <AdvancedMarker
         position={searchCenter}
-        title="Search center"
+        title="Your search location"
         zIndex={1000}
-      />
+      >
+        <Pin
+          background="#ffe066"
+          borderColor="#1a1d2e"
+          glyphColor="#1a1d2e"
+          glyphText="TL"
+          scale={1.15}
+        />
+      </AdvancedMarker>
 
-      {restaurants.map((restaurant) => (
-        <AdvancedMarker
-          key={restaurant.id}
-          position={restaurant.location}
-          title={restaurant.name}
-          zIndex={
-            selectedRestaurant?.id === restaurant.id
-              ? 100
-              : 1
-          }
-          onClick={() => selectRestaurant(restaurant.id)}
+      {restaurants.map((restaurant) => {
+        const isSelected =
+          selectedRestaurant?.id === restaurant.id;
+
+        return (
+          <AdvancedMarker
+            key={restaurant.id}
+            position={restaurant.location}
+            title={`${restaurant.name} — ${
+              restaurant.primaryTypeDisplayName ?? "Restaurant"
+            }`}
+            zIndex={isSelected ? 100 : 1}
+            onClick={() => selectRestaurant(restaurant.id)}
           >
-          
+            <Pin
+              background="#ff6b6b"
+              borderColor={isSelected ? "#1a1d2e" : "#ffffff"}
+              glyphColor="#ffffff"
+              glyphSrc={
+                restaurant.iconMaskBaseURI
+                  ? `${restaurant.iconMaskBaseURI}.svg`
+                  : undefined
+              }
+              glyphText={
+                restaurant.iconMaskBaseURI ? undefined : "R"
+              }
+              scale={isSelected ? 1.2 : 1}
+            />
           </AdvancedMarker>
-      ))}
+        );
+      })}
 
       {selectedRestaurant?.location && (
         <InfoWindow

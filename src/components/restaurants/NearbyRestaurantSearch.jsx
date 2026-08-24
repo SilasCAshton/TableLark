@@ -27,11 +27,6 @@ function NearbyRestaurantSearch({ isCollapsed, onToggleCollapsed }) {
         </p>
 
         <h1>Find somewhere nearby</h1>
-
-        <p>
-          Choose a search style and distance, then explore
-          restaurants that fit the mood.
-        </p>
       </header>
 
       <div
