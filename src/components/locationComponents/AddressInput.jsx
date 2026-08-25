@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 
-const MINIMUM_QUERY_LENGTH = 3;
+const MINIMUM_QUERY_LENGTH = 2;
 const AUTOCOMPLETE_DELAY_MS = 250;
 
 function AddressInput({
@@ -252,6 +252,9 @@ function AddressInput({
                     type="button"
                     role="option"
                     aria-selected={index === activeSuggestionIndex}
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                    }}
                     onClick={() => void selectPrediction(prediction)}
                   >
                     <span>{mainText}</span>
