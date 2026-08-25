@@ -52,3 +52,33 @@
 .restaurant-info-window { max-width: 16rem; color: var(--color-map-info-text); }
 .restaurant-info-window h3 { margin: 0 0 0.4rem; font-size: 1rem; }
 .restaurant-info-window p { margin: 0.3rem 0; }
+
+.map-user-marker {
+  position: relative;
+  display: grid;
+  width: 3rem;
+  height: 3.35rem;
+  place-items: start center;
+  filter: drop-shadow(0 3px 5px rgb(26 29 46 / 35%));
+}
+
+.map-user-marker::after {
+  position: absolute;
+  z-index: 0;
+  bottom: 0.1rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--color-sunshine);
+  background: var(--color-deep-navy);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.map-user-marker__logo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}

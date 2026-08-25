@@ -53,17 +53,11 @@
 }
 
 .home-logo__mark {
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  place-items: center;
-  border: 1px solid var(--color-white-alpha-66);
+  display: block;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
-  background: var(--color-white-alpha-13);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  backdrop-filter: blur(8px);
+  filter: drop-shadow(0 3px 8px rgb(0 0 0 / 24%));
 }
 
 .home-logo__name {

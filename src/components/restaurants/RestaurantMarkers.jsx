@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import Image from "next/image";
 import {
   AdvancedMarker,
   InfoWindow,
@@ -71,13 +72,15 @@ function RestaurantMarkers() {
         title="Your search location"
         zIndex={1000}
       >
-        <Pin
-          background="#ffe066"
-          borderColor="#1a1d2e"
-          glyphColor="#1a1d2e"
-          glyphText="TL"
-          scale={1.15}
-        />
+        <div className="map-user-marker" aria-label="Your search location">
+          <Image
+            className="map-user-marker__logo"
+            src="/tablelark-logo-classic.png"
+            alt=""
+            width={48}
+            height={48}
+          />
+        </div>
       </AdvancedMarker>
 
       {restaurants.map((restaurant) => {

@@ -17,7 +17,7 @@
 }
 
 .topbar-brand { display: inline-flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; color: var(--color-topbar-text); text-decoration: none; }
-.topbar-logo { display: grid; place-items: center; width: 2.15rem; aspect-ratio: 1; color: var(--color-deep-navy); background: linear-gradient(145deg, var(--color-sunshine), var(--color-apricot)); border-radius: 50%; font-size: 0.74rem; font-weight: 900; }
+.topbar-logo { display: block; width: 2.4rem; height: 2.4rem; border-radius: 50%; filter: drop-shadow(0 2px 5px rgb(0 0 0 / 22%)); }
 .topbar-name { font-size: 1.15rem; font-weight: 850; letter-spacing: -0.03em; }
 
 @media (max-width: 720px) {
@@ -27,5 +27,5 @@
 
 @media (max-width: 360px) {
   .top-action-bar { gap: var(--space-1); padding-inline: var(--space-2); }
-  .topbar-logo { width: 2rem; }
+  .topbar-logo { width: 2rem; height: 2rem; }
 }

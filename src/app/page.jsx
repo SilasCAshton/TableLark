@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import HomeRestaurantSearch from "@/components/home/HomeRestaurantSearch";
 
 export default function HomePage() {
@@ -10,7 +11,14 @@ export default function HomePage() {
         <header className="home-header">
           <div className="home-header__nav">
             <div className="home-logo" aria-label="TableLark home">
-              <span className="home-logo__mark" aria-hidden="true">TL</span>
+              <Image
+                className="home-logo__mark"
+                src="/tablelark-logo-classic.png"
+                alt=""
+                width={48}
+                height={48}
+                priority
+              />
               <span className="home-logo__name">TableLark</span>
             </div>
             <Link className="home-finder-link" href="/finder">
