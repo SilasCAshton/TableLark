@@ -9,13 +9,14 @@ import {
 } from "react";
 
 import { DEFAULT_RESTAURANT_SEARCH_PRESET_ID } from "@/lib/restaurants/search-presets";
+import {
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_MAX_REVIEWS,
+  DEFAULT_MIN_RATING,
+  DEFAULT_MIN_REVIEWS,
+} from "@/lib/restaurants/search-config";
 
 const RestaurantSearchContext = createContext(null);
-
-const DEFAULT_MIN_RATING = 4;
-const DEFAULT_MIN_REVIEWS = 10;
-const DEFAULT_MAX_REVIEWS = 300;
-const MAX_RESULTS = 20;
 
 export function RestaurantSearchProvider({ children }) {
   const [searchMode, setSearchMode] = useState("popular");
@@ -23,8 +24,6 @@ export function RestaurantSearchProvider({ children }) {
     DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   );
   const [minRating, setMinRating] = useState(DEFAULT_MIN_RATING);
-  const [minReviews, setMinReviews] = useState(DEFAULT_MIN_REVIEWS);
-  const [maxReviews, setMaxReviews] = useState(DEFAULT_MAX_REVIEWS);
 
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurantId, setSelectedRestaurantId] =
@@ -37,11 +36,11 @@ export function RestaurantSearchProvider({ children }) {
     () => ({
       presetId: cuisinePresetId,
       minRating,
-      minReviews,
-      maxReviews,
-      maxResults: MAX_RESULTS,
+      minReviews: DEFAULT_MIN_REVIEWS,
+      maxReviews: DEFAULT_MAX_REVIEWS,
+      maxResults: DEFAULT_MAX_RESULTS,
     }),
-    [cuisinePresetId, minRating, minReviews, maxReviews],
+    [cuisinePresetId, minRating],
   );
 
   const selectedRestaurant = useMemo(
@@ -104,10 +103,8 @@ export function RestaurantSearchProvider({ children }) {
         setCuisinePresetId,
         minRating,
         setMinRating,
-        minReviews,
-        setMinReviews,
-        maxReviews,
-        setMaxReviews,
+        minReviews: DEFAULT_MIN_REVIEWS,
+        maxReviews: DEFAULT_MAX_REVIEWS,
         searchFilters,
 
         restaurants,

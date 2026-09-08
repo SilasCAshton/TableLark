@@ -1,9 +1,72 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LocationControls from "./LocationControls";
+import PollMenu from "./polls/PollMenu";
+
 function TopActionBar() {
+  const [openMenu, setOpenMenu] = useState(null);
+  const actionBarRef = useRef(null);
+
+  useEffect(() => {
+    function handlePointerDown(event) {
+      const actionBar = actionBarRef.current;
+
+      if (
+        actionBar &&
+        event.target instanceof Node &&
+        !actionBar.contains(event.target)
+      ) {
+        setOpenMenu(null);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  function toggleMenu(menuName) {
+    setOpenMenu((currentMenu) =>
+      currentMenu === menuName ? null : menuName,
+    );
+  }
+
+  function handleBlur(event) {
+    const nextFocusedElement = event.relatedTarget;
+
+    if (
+      nextFocusedElement instanceof Node &&
+      !event.currentTarget.contains(nextFocusedElement)
+    ) {
+      setOpenMenu(null);
+    }
+  }
+
+  function handleKeyDown(event) {
+    if (event.key !== "Escape" || !openMenu) {
+      return;
+    }
+
+    const menuToFocus = openMenu;
+
+    setOpenMenu(null);
+    actionBarRef.current
+      ?.querySelector(`[data-menu-trigger="${menuToFocus}"]`)
+      ?.focus();
+  }
+
   return (
-    <header className="top-action-bar">
+    <header
+      ref={actionBarRef}
+      className="top-action-bar"
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+    >
       <Link className="topbar-brand" href="/" aria-label="TableLark home">
         <Image
           className="topbar-logo"
@@ -17,7 +80,17 @@ function TopActionBar() {
         <span className="topbar-name">TableLark</span>
       </Link>
 
-      <LocationControls />
+      <div className="topbar-actions">
+        <LocationControls
+          isOpen={openMenu === "location"}
+          onToggle={() => toggleMenu("location")}
+          onRequestClose={() => setOpenMenu(null)}
+        />
+        <PollMenu
+          isOpen={openMenu === "poll"}
+          onToggle={() => toggleMenu("poll")}
+        />
+      </div>
     </header>
   );
 }

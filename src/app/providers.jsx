@@ -3,6 +3,7 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import { LocationProvider } from "@/context/LocationContext";
+import PollBuilderProvider from "@/context/PollBuilderProvider";
 import { RestaurantSearchProvider } from "@/context/RestaurantSearchContext";
 
 export default function AppProviders({ children, initialLocation }) {
@@ -12,7 +13,9 @@ export default function AppProviders({ children, initialLocation }) {
     >
       <LocationProvider initialLocation={initialLocation}>
         <RestaurantSearchProvider>
-          {children}
+          <PollBuilderProvider>
+            {children}
+          </PollBuilderProvider>
         </RestaurantSearchProvider>
       </LocationProvider>
     </APIProvider>

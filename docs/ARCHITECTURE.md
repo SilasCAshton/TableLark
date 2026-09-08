@@ -1,6 +1,6 @@
 # TableLark Architecture
 
-This document describes the current TableLark implementation and the responsibility boundaries between the browser frontend, the Next.js backend, browser platform APIs, and Google Maps Platform.
+This document describes the current TableLark implementation and the responsibility boundaries between the browser frontend, the Next.js backend, PostgreSQL, browser platform APIs, and Google Maps Platform. The detailed polling design is documented separately in [POLLING.md](POLLING.md).
 
 ## System overview
 
@@ -10,9 +10,25 @@ TableLark is a Next.js App Router application with two user-facing routes and on
 | --- | --- | --- |
 | `/` | Next.js page plus client components | Homepage, browser geolocation entry point, and address autocomplete entry point. |
 | `/finder` | Next.js page plus client components | Interactive map, location controls, search filters, results, and restaurant selection. |
+| `/polls/[slug]` | Next.js page plus client components | Participant ballot, private waiting state, organizer controls, tie choice, and final result. |
 | `/api/restaurants/search` | Next.js Node.js server route | Validates search requests, protects the private API key, queries Google Places, and applies TableLark search logic. |
 
-The browser talks directly to Google Maps Platform for map rendering and address autocomplete. Restaurant discovery follows a separate path through TableLark's server so the private Places API key and search rules never need to be exposed to the browser.
+The browser talks directly to Google Maps Platform for map rendering and address autocomplete. Restaurant discovery follows a separate path through TableLark's server so the private Places API key and search rules never need to be exposed to the browser. The polling backend follows another server-only path through the Next.js poll API, poll domain service, Drizzle, and PostgreSQL. Poll user interfaces are not part of the current phase.
+
+### Polling routes
+
+| Route | Runtime | Purpose |
+| --- | --- | --- |
+| `/api/polls` | Next.js Node.js route | Creates a poll and establishes organizer ownership. |
+| `/api/polls/[slug]` | Next.js Node.js route | Returns participant-safe state and the current browser's ballot. |
+| `/api/polls/[slug]/ballot` | Next.js Node.js route | Creates or replaces the current browser's ballot. |
+| `/api/polls/[slug]/manage` | Next.js Node.js route | Returns organizer-only count and decision state. |
+| `/api/polls/[slug]/close` | Next.js Node.js route | Permanently closes an open poll. |
+| `/api/polls/[slug]/tie-decision` | Next.js Node.js route | Resolves an organizer-controlled final tie. |
+
+### Polling responsibility boundary
+
+The polling API validates request size and JSON, reads private cookies, and delegates to the server-only poll service. The service owns organizer authorization, browser ballot identity, poll-row locking, deadline and capacity closure, scoring, tie resolution, and participant-safe response construction. Drizzle performs parameterized PostgreSQL operations. PostgreSQL stores restaurant snapshots and ballots and enforces cross-poll, uniqueness, and rank constraints. Neither organizer nor voter credentials are stored in usable form.
 
 ## Responsibility boundaries
 
@@ -173,6 +189,8 @@ restaurants, selectedRestaurantId, isLoading, errorMessage, hasSearched
 ```
 
 Derived values such as `searchFilters` and `selectedRestaurant` are memoized. Actions centralize the transitions for beginning, completing, failing, clearing, and selecting within a search.
+
+`PollBuilderContext` separately owns the in-memory restaurant shortlist. Adding a result retains the complete normalized restaurant object even though the Poll menu displays only its name and removal control. Keeping this state outside `RestaurantSearchContext` allows search results to change or clear without discarding the prospective poll list. Duplicate place IDs and additions beyond the backend's 20-option limit are ignored. The Poll menu submits these snapshots and its duration, ballot-limit, and tie-mode settings to the polling API, then routes the organizer to the generated shared page.
 
 ### Request management
 

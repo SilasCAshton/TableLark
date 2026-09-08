@@ -5,15 +5,29 @@
 .restaurant-eyebrow { margin-bottom: var(--space-1); color: var(--color-link); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
 .restaurant-panel-toggle { display: none; }
 .restaurant-search-content { display: flex; flex: 1 1 0; flex-direction: column; gap: var(--space-3); min-height: 0; }
+.restaurant-mobile-tabs { display: none; }
+.restaurant-mobile-results-summary { display: none; }
+.restaurant-mobile-tab-panel { display: contents; }
 
 @media (max-width: 720px) {
-  .nearby-restaurant-search { gap: var(--space-2); padding: 1.75rem var(--space-3) var(--space-3); }
-  .restaurant-search-header { padding-bottom: var(--space-2); }
-  .restaurant-search-header h1 { font-size: 1.15rem; }
+  .nearby-restaurant-search { gap: 0.375rem; padding: 1.5rem var(--space-3) var(--space-3); }
+  .restaurant-search-header { padding-bottom: 0.125rem; border-bottom: 0; }
+  .restaurant-search-header h1 { font-size: 1.15rem; text-align: center; }
   .restaurant-search-header > p:last-child { display: none; }
+  .restaurant-eyebrow { display: none; }
   .restaurant-panel-toggle { position: absolute; top: 0.25rem; left: 50%; display: grid; width: 3rem; min-height: 1.35rem; padding: 0; place-items: center; color: var(--color-subtle-text); border: 0; background: transparent; transform: translateX(-50%); }
   .restaurant-panel-toggle::before { width: 0.55rem; height: 0.55rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; content: ""; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--transition-fast); }
-  .restaurant-search-content { gap: var(--space-2); }
+  .restaurant-search-content { gap: 0.375rem; }
+  .restaurant-mobile-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); flex: 0 0 auto; padding-inline: 0.15rem; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-surface-highlight); }
+  .restaurant-mobile-tabs button { position: relative; min-height: 2.25rem; padding: 0.25rem 0.75rem 0.4rem; color: var(--color-muted-text); border: 0; background: transparent; font-size: 0.82rem; font-weight: 800; }
+  .restaurant-mobile-tabs button::after { position: absolute; right: 20%; bottom: -1px; left: 20%; height: 2px; border-radius: var(--radius-pill); background: transparent; content: ""; }
+  .restaurant-mobile-tabs button[aria-selected="true"] { color: var(--color-heading); }
+  .restaurant-mobile-tabs button[aria-selected="true"]::after { background: var(--color-primary); }
+  .restaurant-mobile-tabs button:focus-visible { outline: none; color: var(--color-heading); }
+  .restaurant-mobile-tabs button:focus-visible::after { height: 4px; background: var(--color-focus); }
+  .restaurant-mobile-results-summary { display: block; flex: 0 0 auto; margin: -0.15rem 0 0; color: var(--color-muted-text); font-size: 0.75rem; text-align: center; }
+  .restaurant-mobile-tab-panel { display: none; min-height: 0; }
+  .restaurant-mobile-tab-panel--active { display: flex; flex: 1 1 0; flex-direction: column; }
 
   .nearby-restaurant-search--collapsed {
     height: auto;

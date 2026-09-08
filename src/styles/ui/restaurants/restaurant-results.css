@@ -12,7 +12,8 @@
 .restaurant-card:hover { transform: translateY(-1px); background: var(--color-card-hover); box-shadow: var(--shadow-small); }
 .restaurant-card-selected { border-color: var(--color-card-selected-border); background: var(--color-card-selected); box-shadow: 0 0 0 3px var(--color-card-selected-ring); }
 .restaurant-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
-.restaurant-card h3 { margin: 0; color: var(--color-heading); font-size: 1rem; line-height: 1.25; }
+.restaurant-card-header > div { flex: 1; min-width: 0; }
+.restaurant-card h3 { margin: 0; color: var(--color-heading); font-size: 1rem; line-height: 1.25; transition: color 250ms cubic-bezier(0.33, 1, 0.68, 1); }
 .restaurant-type, .restaurant-address { color: var(--color-muted-text); font-size: 0.82rem; }
 .restaurant-type { margin: 0.2rem 0 0; }
 .restaurant-address { margin: var(--space-2) 0; }
@@ -21,5 +22,20 @@
 .restaurant-card-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 .restaurant-card-actions button, .restaurant-card-actions a { min-height: 2.2rem; padding: 0.48rem 0.65rem; border-radius: var(--radius-small); font-size: 0.76rem; font-weight: 800; text-decoration: none; }
 .restaurant-card-actions button { color: var(--color-text-on-dark); background: var(--color-primary); border: 1px solid var(--color-primary); }
+.restaurant-card-header .restaurant-poll-action { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 1.5rem; height: 1.5rem; min-height: 0; padding: 0; color: var(--color-link); background: transparent; border: 0; border-radius: var(--radius-small); cursor: pointer; }
+.restaurant-poll-action svg { width: 1rem; height: 1rem; }
+.restaurant-poll-action:focus-visible { outline: 2px solid var(--color-link); outline-offset: 2px; }
+.restaurant-poll-action[aria-disabled="true"] { cursor: default; }
+.restaurant-card-actions button:disabled { cursor: not-allowed; opacity: 0.6; }
 .restaurant-card-actions a { color: var(--color-link); background: var(--color-surface-highlight); border: 1px solid var(--color-border); }
 .place-attributions { flex: 0 0 auto; padding: var(--space-2) var(--space-4); color: var(--color-muted-text); border-top: 1px solid var(--color-divider); font-size: 0.68rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .restaurant-card h3 { transition: none; }
+}
+
+@media (max-width: 720px) {
+  .restaurant-results { border: 0; border-radius: 0; background: transparent; }
+  .restaurant-results-heading { display: none; }
+  .restaurant-results-scroll { padding: 0; scrollbar-gutter: auto; }
+}

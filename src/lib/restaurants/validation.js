@@ -1,3 +1,8 @@
+import {
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_MAX_REVIEWS,
+  DEFAULT_MIN_REVIEWS,
+} from "./search-config.js";
 import { getRestaurantSearchPreset } from "./search-presets.js";
 
 const SEARCH_MODES = new Set(["popular", "hidden"]);
@@ -131,7 +136,7 @@ export function validateRestaurantSearch(payload) {
         ],
       }),
       maxResults: readIntegerInRange(
-        filters.maxResults ?? 20,
+        filters.maxResults ?? DEFAULT_MAX_RESULTS,
         "Maximum results",
         1,
         20,
@@ -150,13 +155,13 @@ export function validateRestaurantSearch(payload) {
 
   if (mode === "hidden") {
     const minReviews = readIntegerInRange(
-      filters.minReviews ?? 10,
+      filters.minReviews ?? DEFAULT_MIN_REVIEWS,
       "Minimum reviews",
       1,
       1000000,
     );
     const maxReviews = readIntegerInRange(
-      filters.maxReviews ?? 300,
+      filters.maxReviews ?? DEFAULT_MAX_REVIEWS,
       "Maximum reviews",
       1,
       1000000,

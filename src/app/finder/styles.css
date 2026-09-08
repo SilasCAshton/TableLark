@@ -1,6 +1,8 @@
 @import "../../styles/pages/restaurant-finder.css";
 @import "../../styles/ui/restaurant-map.css";
 @import "../../styles/ui/top-action-bar.css";
+@import "../../styles/ui/poll-menu.css";
+@import "../../styles/pages/poll.css";
 @import "../../styles/ui/restaurants/nearby-restaurant-search.css";
 @import "../../styles/ui/restaurants/restaurant-search-controls.css";
 @import "../../styles/ui/restaurants/restaurant-results.css";

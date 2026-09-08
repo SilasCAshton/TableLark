@@ -1,0 +1,1 @@
+export const POLL_RESTAURANT_COLOR = "#8B5E3C";

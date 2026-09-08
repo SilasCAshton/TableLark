@@ -44,10 +44,6 @@ function RestaurantSearchControls() {
     setCuisinePresetId,
     minRating,
     setMinRating,
-    minReviews,
-    setMinReviews,
-    maxReviews,
-    setMaxReviews,
     isLoading,
   } = useRestaurantSearch();
   const { searchRestaurants } = useRestaurantSearchRequest();
@@ -143,42 +139,6 @@ function RestaurantSearchControls() {
             </select>
           </div>
 
-          {searchMode === "hidden" && (
-            <div className="hidden-gem-filters">
-              <div className="restaurant-control">
-                <label htmlFor="hidden-min-reviews">
-                  Minimum reviews
-                </label>
-
-                <input
-                  id="hidden-min-reviews"
-                  type="number"
-                  min="1"
-                  max={maxReviews}
-                  value={minReviews}
-                  onChange={(event) =>
-                    setMinReviews(Number(event.target.value))
-                  }
-                />
-              </div>
-
-              <div className="restaurant-control">
-                <label htmlFor="hidden-max-reviews">
-                  Maximum reviews
-                </label>
-
-                <input
-                  id="hidden-max-reviews"
-                  type="number"
-                  min={minReviews}
-                  value={maxReviews}
-                  onChange={(event) =>
-                    setMaxReviews(Number(event.target.value))
-                  }
-                />
-              </div>
-            </div>
-          )}
         </div>
       </details>
 

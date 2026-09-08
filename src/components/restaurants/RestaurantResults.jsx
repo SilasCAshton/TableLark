@@ -1,6 +1,8 @@
 "use client";
 
+import { usePollBuilder } from "@/context/PollBuilderContext";
 import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
+import { POLL_RESTAURANT_COLOR } from "@/lib/restaurants/poll-appearance";
 function formatPriceLevel(priceLevel) {
   const priceLabels = {
     FREE: "Free",
@@ -15,6 +17,12 @@ function formatPriceLevel(priceLevel) {
 
 function RestaurantCard({ restaurant }) {
   const {
+    addRestaurant,
+    removeRestaurant,
+    hasRestaurant,
+    isFull,
+  } = usePollBuilder();
+  const {
     selectedRestaurantId,
     selectRestaurant,
     minRating,
@@ -24,6 +32,12 @@ function RestaurantCard({ restaurant }) {
 
   const isSelected =
     selectedRestaurantId === restaurant.id;
+  const isInPoll = hasRestaurant(restaurant.id);
+  const pollActionLabel = isInPoll
+    ? "Remove from poll"
+    : isFull
+      ? "Poll is full"
+      : "Add to poll";
 
   const priceLabel = formatPriceLevel(
     restaurant.priceLevel,
@@ -46,7 +60,9 @@ function RestaurantCard({ restaurant }) {
     >
       <div className="restaurant-card-header">
         <div>
-          <h3>{restaurant.name}</h3>
+          <h3 style={isInPoll ? { color: POLL_RESTAURANT_COLOR } : undefined}>
+            {restaurant.name}
+          </h3>
 
           {restaurant.primaryTypeDisplayName && (
             <p className="restaurant-type">
@@ -60,6 +76,34 @@ function RestaurantCard({ restaurant }) {
             Hidden gem
           </span>
         )}
+        <button
+          type="button"
+          className="restaurant-poll-action"
+          aria-label={pollActionLabel}
+          title={pollActionLabel}
+          aria-disabled={!isInPoll && isFull}
+          onClick={() => {
+            if (isInPoll) {
+              removeRestaurant(restaurant.id);
+            } else if (!isFull) {
+              addRestaurant(restaurant);
+            }
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d={isInPoll ? "M5 12l4 4L19 6" : "M12 5v14M5 12h14"} />
+          </svg>
+        </button>
       </div>
 
       <p className="restaurant-address">
@@ -86,6 +130,8 @@ function RestaurantCard({ restaurant }) {
       </div>
 
       <div className="restaurant-card-actions">
+
+
         <button
           type="button"
           onClick={() =>
