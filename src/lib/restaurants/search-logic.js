@@ -1,4 +1,8 @@
 import { isChainRestaurant } from "./chain-filter.js";
+import {
+  DEFAULT_MAX_REVIEWS,
+  DEFAULT_MIN_REVIEWS,
+} from "./search-config.js";
 
 const METERS_PER_LATITUDE_DEGREE = 111320;
 
@@ -102,7 +106,10 @@ export function normalizePlace(place) {
 
 export function calculateHiddenGemScore(
   restaurant,
-  { minReviews = 10, maxReviews = 300 } = {},
+  {
+    minReviews = DEFAULT_MIN_REVIEWS,
+    maxReviews = DEFAULT_MAX_REVIEWS,
+  } = {},
 ) {
   const rating = restaurant.rating ?? 0;
   const reviewCount = restaurant.reviewCount ?? 0;

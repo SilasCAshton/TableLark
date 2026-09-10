@@ -4,15 +4,26 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "db:down": "docker compose down",
+    "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.js",
+    "db:setup": "node scripts/setup-local-database.js",
+    "db:up": "docker compose up -d postgres",
     "dev": "next dev",
     "build": "next build",
     "lint": "oxlint",
     "test": "node --test",
+    "test:db": "node scripts/run-database-tests.js",
     "start": "next start"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@vercel/analytics": "^2.0.1",
     "@vis.gl/react-google-maps": "^1.9.0",
+    "drizzle-orm": "0.45.2",
     "next": "^16.0.0",
+    "pg": "8.23.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "server-only": "^0.0.1"

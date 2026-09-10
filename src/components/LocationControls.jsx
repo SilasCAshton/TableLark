@@ -9,7 +9,11 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function LocationControls() {
+function LocationControls({
+  isOpen,
+  onToggle,
+  onRequestClose,
+}) {
   const { updateLocation } = useLocation();
 
   function processLatitudeAndLongitude(
@@ -34,6 +38,7 @@ function LocationControls() {
     const clampedLongitude = clamp(lng, -180, 180);
 
     updateLocation(clampedLatitude, clampedLongitude);
+    onRequestClose();
   }
 
   return (
@@ -41,10 +46,23 @@ function LocationControls() {
       className="location-controls"
       aria-label="Choose a search location"
     >
-      <details className="location-menu">
-        <summary>Location</summary>
+      <div className="location-menu">
+        <button
+          type="button"
+          className="location-menu__trigger"
+          data-menu-trigger="location"
+          aria-expanded={isOpen}
+          aria-controls="location-menu-panel"
+          onClick={onToggle}
+        >
+          Location
+        </button>
 
-        <div className="location-menu__panel">
+        {isOpen ? (
+          <div
+            id="location-menu-panel"
+            className="location-menu__panel"
+          >
           <CurrentLocationInput
             processLatitudeAndLongitude={
               processLatitudeAndLongitude
@@ -60,8 +78,9 @@ function LocationControls() {
               processLatitudeAndLongitude
             }
           />
-        </div>
-      </details>
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 }

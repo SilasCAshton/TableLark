@@ -39,11 +39,36 @@
     top: auto;
     right: var(--floating-panel-gap);
     width: auto;
-    height: min(62dvh, 38rem);
-    transition: height var(--transition-normal);
+    height: min(50dvh, 30.5rem);
+    transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .restaurant-sidebar--collapsed {
+    height: 3.75rem;
+  }
+
+  .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed) {
+    height: 17rem;
+  }
+
+  .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed):has(.restaurant-settings[open]) {
+    height: min(50dvh, 30.5rem);
+  }
+
+  .restaurant-sidebar--search-tab .nearby-restaurant-search,
+  .restaurant-sidebar--search-tab .restaurant-search-content,
+  .restaurant-sidebar--search-tab .restaurant-mobile-tab-panel--active {
     height: auto;
+  }
+
+  .restaurant-sidebar--search-tab .restaurant-search-content,
+  .restaurant-sidebar--search-tab .restaurant-mobile-tab-panel--active {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .restaurant-sidebar {
+    transition: none;
   }
 }

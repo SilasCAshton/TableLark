@@ -2,9 +2,12 @@
 
 TableLark is a React application for finding restaurants around a chosen location. It displays Google Places results in a searchable sidebar and on an interactive Google map.
 
+The Finder includes **Lark Together**, a shareable way for groups to rank restaurant choices. Restaurant cards can add complete restaurant records to a separate in-memory shortlist, the top-bar Lark Together menu configures and creates a persisted poll, and the generated link supports private voting, waiting, organizer controls, and final results. Internal routes, files, and database tables retain the established `poll` terminology.
+
 ## Documentation
 
 - [Architecture and responsibility boundaries](docs/ARCHITECTURE.md) explains the frontend, backend, Google Maps Platform integration, API contract, search algorithms, and UML diagrams.
+- [Lark Together polling backend](docs/POLLING.md) explains the poll database, lifecycle, security model, API, files, local workflow, and integration with restaurant discovery.
 - [Ideas backlog](IDEAS.md) records potential features that are not yet committed for implementation.
 
 ## How it works
@@ -29,10 +32,12 @@ Users can also choose a built-in category preset and a search radius from 1 to 2
 - `src/app/providers.jsx` configures the client-side Google Maps API provider and application contexts.
 - `src/app/globals.css` is the global stylesheet entrypoint used by the root layout.
 - `src/app/api/restaurants/search/route.js` validates restaurant requests, applies basic rate limiting, invokes the server search, and returns normalized JSON.
+- `src/app/api/polls/` exposes the backend-only poll creation, voting, management, closure, and tie-decision API.
 - `src/context/LocationContext.jsx` owns the search coordinates and radius.
 - `src/context/RestaurantSearchContext.jsx` owns search settings, results, selection, loading state, and errors.
 - `src/hooks/useRestaurantSearchRequest.js` sends lightweight browser requests to the restaurant API and manages cancellation and search state.
 - `src/lib/restaurants/` contains server-side Google Places access, validation, subdivision, distance filtering, normalization, and hidden-gem scoring.
+- `src/lib/database/` and `src/lib/polls/` contain the PostgreSQL connection, Drizzle schema, polling transactions, scoring, validation, and security boundaries.
 - `src/components/RestaurantMap.jsx` and `src/components/restaurants/RestaurantMarkers.jsx` render the map, search center, restaurant markers, and information windows.
 - `src/components/LocationControls.jsx` and `src/components/restaurants/RestaurantSearchControls.jsx` provide the location and restaurant filters.
 - `src/styles/` contains the global theme, responsive layout, and component styles.
@@ -91,6 +96,29 @@ npm run start
 ```
 
 Next.js supports deployment as a Node.js server. A static-only host is not sufficient because `/api/restaurants/search` executes on the server for every search.
+
+## Local polling database
+
+The Lark Together backend uses PostgreSQL, and the complete polling flow can be run locally. With Docker Desktop running:
+
+```sh
+npm run db:up
+npm run db:setup
+```
+
+Add the development connection to `.env.local`:
+
+```dotenv
+DATABASE_URL=postgresql://tablelark:tablelark@localhost:55432/tablelark
+```
+
+Run the database integration suite with:
+
+```sh
+npm run test:db
+```
+
+See [the polling backend documentation](docs/POLLING.md) for the complete schema, API, migration, security, and local-development guide.
 
 ## Test and verify
 
