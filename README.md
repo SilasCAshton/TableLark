@@ -99,6 +99,8 @@ Next.js supports deployment as a Node.js server. A static-only host is not suffi
 
 ## Local polling database
 
+For hosted deployment, follow [Vercel and Neon setup](docs/VERCEL-NEON.md).
+
 The Lark Together backend uses PostgreSQL, and the complete polling flow can be run locally. With Docker Desktop running:
 
 ```sh
