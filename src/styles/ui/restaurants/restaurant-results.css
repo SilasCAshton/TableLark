@@ -9,6 +9,7 @@
 .restaurant-results-scroll { flex: 1 1 0; min-height: 0; padding: var(--space-3); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .restaurant-card-list { display: grid; gap: var(--space-3); }
 .restaurant-card { padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-card-bg); box-shadow: var(--shadow-card-resting); transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast); }
+.restaurant-card { cursor: pointer; }
 .restaurant-card:hover { transform: translateY(-1px); background: var(--color-card-hover); box-shadow: var(--shadow-small); }
 .restaurant-card-selected { border-color: var(--color-card-selected-border); background: var(--color-card-selected); box-shadow: 0 0 0 3px var(--color-card-selected-ring); }
 .restaurant-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }

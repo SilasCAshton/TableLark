@@ -28,6 +28,7 @@ export function RestaurantSearchProvider({ children }) {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurantId, setSelectedRestaurantId] =
     useState(null);
+  const [highlightedRestaurantId, highlightRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
@@ -57,6 +58,7 @@ export function RestaurantSearchProvider({ children }) {
     setErrorMessage("");
     setHasSearched(true);
     setSelectedRestaurantId(null);
+    highlightRestaurant(null);
   }, []);
 
   const completeSearch = useCallback((newRestaurants) => {
@@ -68,6 +70,7 @@ export function RestaurantSearchProvider({ children }) {
   const failSearch = useCallback((message) => {
     setRestaurants([]);
     setSelectedRestaurantId(null);
+    highlightRestaurant(null);
     setIsLoading(false);
     setHasSearched(true);
     setErrorMessage(message);
@@ -76,6 +79,7 @@ export function RestaurantSearchProvider({ children }) {
   const clearSearchResults = useCallback(() => {
     setRestaurants([]);
     setSelectedRestaurantId(null);
+    highlightRestaurant(null);
     setIsLoading(false);
     setErrorMessage("");
     setHasSearched(false);
@@ -84,14 +88,15 @@ export function RestaurantSearchProvider({ children }) {
   const selectRestaurant = useCallback((restaurantOrId) => {
     if (!restaurantOrId) {
       setSelectedRestaurantId(null);
+      highlightRestaurant(null);
       return;
     }
 
-    setSelectedRestaurantId(
-      typeof restaurantOrId === "string"
-        ? restaurantOrId
-        : restaurantOrId.id,
-    );
+    const id = typeof restaurantOrId === "string"
+      ? restaurantOrId
+      : restaurantOrId.id;
+    setSelectedRestaurantId(id);
+    highlightRestaurant(id);
   }, []);
 
   return (
@@ -109,6 +114,8 @@ export function RestaurantSearchProvider({ children }) {
 
         restaurants,
         selectedRestaurantId,
+        highlightedRestaurantId,
+        highlightRestaurant,
         selectedRestaurant,
         isLoading,
         errorMessage,

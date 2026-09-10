@@ -22,6 +22,7 @@ import {
   selectOrganizerBallot,
   selectPollBySlug,
   selectPollOptions,
+  selectPollVoterNames,
   selectTieCandidateIds,
   updatePollClosure,
 } from "./repository.js";
@@ -158,7 +159,8 @@ async function buildParticipantView(
 }
 
 async function buildOrganizerView(tx, poll) {
-  const ballotCount = await countPollBallots(tx, poll.id);
+  const voters = await selectPollVoterNames(tx, poll.id);
+  const voterNames = voters.map(({ name }) => name?.trim()).filter(Boolean);
   const organizerBallot = await selectOrganizerBallot(tx, poll.id);
   const candidateRows = await selectTieCandidateIds(tx, poll.id);
   const options = await selectPollOptions(tx, poll.id);
@@ -175,7 +177,9 @@ async function buildOrganizerView(tx, poll) {
     status: poll.status,
     deadlineAt: poll.deadlineAt.toISOString(),
     maximumBallots: poll.maximumBallots,
-    acceptedBallots: ballotCount,
+    acceptedBallots: voters.length,
+    voterNames,
+    unnamedVotes: voters.length - voterNames.length,
     organizerHasVoted: Boolean(organizerBallot),
     closeReason: poll.closeReason,
     tieCandidates: candidateRows

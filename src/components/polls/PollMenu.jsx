@@ -92,7 +92,7 @@ function PollMenu({ isOpen, onToggle }) {
       setCreationError(
         error instanceof Error
           ? error.message
-          : "Lark Together could not be started.",
+          : "Group Favorite could not be started.",
       );
     } finally {
       setIsCreating(false);
@@ -102,7 +102,7 @@ function PollMenu({ isOpen, onToggle }) {
   return (
     <section
       className="poll-menu-controls"
-      aria-label="Lark Together"
+      aria-label="Group Favorite"
     >
       <div className="poll-menu">
         <button
@@ -113,7 +113,7 @@ function PollMenu({ isOpen, onToggle }) {
           aria-controls="poll-menu-panel"
           onClick={onToggle}
         >
-          Lark Together
+          Group Favorite
         </button>
 
           <div
@@ -122,20 +122,20 @@ function PollMenu({ isOpen, onToggle }) {
             hidden={!isOpen}
           >
           {activePollSlug ? (
-            <div className="poll-menu__views" aria-label="Lark Together views">
+            <div className="poll-menu__views" aria-label="Group Favorite views">
               <button
                 type="button"
                 aria-pressed={showActivePoll}
                 onClick={() => setIsBuilding(false)}
               >
-                Current choice
+                Current poll
               </button>
               <button
                 type="button"
                 aria-pressed={!showActivePoll}
                 onClick={() => setIsBuilding(true)}
               >
-                Start new{pollRestaurants.length > 0 ? ` (${pollRestaurants.length})` : ""}
+                Create another
               </button>
             </div>
           ) : null}
@@ -152,20 +152,17 @@ function PollMenu({ isOpen, onToggle }) {
           ) : null}
 
           <div className="poll-menu__draft" hidden={showActivePoll}>
-          <h2>Start choosing together</h2>
-          {activePollSlug ? (
-            <p>
-              Starting a new group choice will replace the one remembered
-              here. Your existing shared link will still work.
-            </p>
-          ) : null}
-
+          <h2>
+            Pick a few restaurants, invite your friends to vote, and find a favorite.
+          </h2>
           {pollRestaurants.length === 0 ? (
-            <p>
-              Add restaurants from the search results to start choosing
-              together.
-            </p>
-          ) : (
+            <p>Add restaurants using the + next to their names.</p>
+          ) : null}
+          <p role="status">
+            <strong>{pollRestaurants.length} {pollRestaurants.length === 1 ? "restaurant" : "restaurants"} added</strong>
+          </p>
+
+          {pollRestaurants.length > 0 ? (
             <ul>
               {pollRestaurants.map((restaurant) => (
                 <li
@@ -175,7 +172,7 @@ function PollMenu({ isOpen, onToggle }) {
                   <span>{restaurant.name}</span>
                   <button
                     type="button"
-                    aria-label={`Remove ${restaurant.name} from Lark Together`}
+                    aria-label={`Remove ${restaurant.name} from Group Favorite`}
                     onClick={() => removeRestaurant(restaurant.id)}
                   >
                     Remove
@@ -183,7 +180,7 @@ function PollMenu({ isOpen, onToggle }) {
                 </li>
               ))}
             </ul>
-          )}
+          ) : null}
 
           {pollRestaurants.length > 0 ? (
             <form
@@ -191,10 +188,10 @@ function PollMenu({ isOpen, onToggle }) {
               onSubmit={handleCreatePoll}
             >
               <details className="poll-menu__settings">
-                <summary>Lark Together settings</summary>
+                <summary>Poll settings</summary>
                 <div className="poll-menu__settings-fields">
                   <label>
-                    Time to choose
+                    Voting duration
                     <select
                       value={durationMinutes}
                       onChange={(event) =>
@@ -210,7 +207,7 @@ function PollMenu({ isOpen, onToggle }) {
                   </label>
 
                   <label>
-                    Number of voters
+                    Maximum number of voters
                     <input
                       type="number"
                       min={MINIMUM_BALLOTS}
@@ -245,7 +242,7 @@ function PollMenu({ isOpen, onToggle }) {
 
               {pollRestaurants.length < MINIMUM_POLL_OPTIONS ? (
                 <p className="poll-menu__hint">
-                  Add at least two restaurants to start choosing together.
+                  Add at least two restaurants to create a poll.
                 </p>
               ) : null}
 
@@ -260,8 +257,13 @@ function PollMenu({ isOpen, onToggle }) {
                 className="poll-menu__create"
                 disabled={!canCreate}
               >
-                {isCreating ? "Starting…" : "Start choosing"}
+                {isCreating ? "Creating…" : "Create poll"}
               </button>
+              {activePollSlug ? (
+                <p className="poll-menu__hint">
+                  Your previous poll stays available through its shared link.
+                </p>
+              ) : null}
             </form>
           ) : null}
           </div>

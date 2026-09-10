@@ -414,7 +414,11 @@ npm run build
 
 The regular unit command skips database integration cases unless `TEST_DATABASE_URL` is supplied. `npm run test:db` supplies the isolated local test database URL and requires the PostgreSQL container and migrations.
 
-The database suite truncates only the dedicated `tablelark_test` database. It does not touch local development or production data.
+Local setup validates both connection URLs before applying either migration: development must target `tablelark`, and tests must target `tablelark_test`, on `localhost` or `127.0.0.1` at port `55432`. Only PostgreSQL URLs without query parameters or fragments are accepted; query parameters can override connection targets.
+
+The database suite enforces the test URL restriction before creating its connection pool, including when the test file is run directly. Before every truncation, it checks `current_database()` on the same connection used for cleanup and refuses any database other than `tablelark_test`. These checks prevent accidental target selection; production credentials should still be kept out of local and test environments.
+
+`npm run db:migrate` remains the separate deployment migration command and can target a hosted database through `DATABASE_URL`. It is not subject to the local-only checks. Keep production credentials confined to the production deployment environment and use separate databases for previews.
 
 ## Deployment path
 

@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 
-import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
+import {
+  assertLocalDatabaseTarget,
+  assertConnectedTestDatabase,
+} from "../../scripts/local-database-target.js";
 
 import {
   createPoll,
@@ -16,6 +19,7 @@ import {
 
 const { Pool } = pg;
 const databaseUrl = process.env.TEST_DATABASE_URL;
+if (databaseUrl !== undefined) assertLocalDatabaseTarget(databaseUrl, "test");
 const databaseTest = databaseUrl ? test : test.skip;
 const pool = databaseUrl
   ? new Pool({ connectionString: databaseUrl, max: 8 })
@@ -46,9 +50,13 @@ const restaurants = [
 ];
 
 async function clearDatabase() {
-  await db.execute(sql`
-    TRUNCATE TABLE polls CASCADE
-  `);
+  const client = await pool.connect();
+  try {
+    await assertConnectedTestDatabase(client);
+    await client.query("TRUNCATE TABLE polls CASCADE");
+  } finally {
+    client.release();
+  }
 }
 
 async function makePoll(overrides = {}) {
@@ -74,8 +82,11 @@ function rankings(optionIds) {
 if (databaseUrl) {
   before(clearDatabase);
   after(async () => {
-    await clearDatabase();
-    await pool.end();
+    try {
+      await clearDatabase();
+    } finally {
+      await pool.end();
+    }
   });
 }
 
@@ -92,6 +103,8 @@ databaseTest("creates a private poll view without exposing organizer data", asyn
   assert.equal(participant.ballot, null);
   assert.equal(participant.acceptedBallots, undefined);
   assert.equal(participant.maximumBallots, undefined);
+  assert.equal(participant.voterNames, undefined);
+  assert.equal(participant.unnamedVotes, undefined);
   assert.equal(participant.winner, null);
 });
 
@@ -125,6 +138,8 @@ databaseTest("edits replace a ballot without increasing the count", async () => 
   );
 
   assert.equal(organizer.acceptedBallots, 1);
+  assert.deepEqual(organizer.voterNames, ["Taylor edited"]);
+  assert.equal(organizer.unnamedVotes, 0);
   assert.equal(participant.ballot.name, "Taylor edited");
   assert.equal(
     participant.ballot.rankings[0].optionId,
@@ -150,6 +165,21 @@ databaseTest("reserves one position for the organizer", async () => {
     ),
     (error) => error.code === "ORGANIZER_BALLOT_RESERVED",
   );
+});
+
+databaseTest("organizers see each named voter and count unnamed votes", async () => {
+  const created = await makePoll({ maximumBallots: 5 });
+  const optionIds = created.poll.options.map((option) => option.id);
+  for (const name of ["Alex", "Alex", "   ", undefined]) {
+    await submitBallot(created.poll.slug, { name, rankings: rankings(optionIds) }, { db, now });
+  }
+  const organizer = await getOrganizerPoll(created.poll.slug, created.ownerToken, { db, now });
+  assert.equal(organizer.acceptedBallots, 4);
+  assert.deepEqual(organizer.voterNames, ["Alex", "Alex"]);
+  assert.equal(organizer.unnamedVotes, 2);
+  const participant = await getParticipantPoll(created.poll.slug, null, { db, now });
+  assert.equal(participant.voterNames, undefined);
+  assert.equal(participant.unnamedVotes, undefined);
 });
 
 databaseTest("persists an organizer-selected result after a complete tie", async () => {

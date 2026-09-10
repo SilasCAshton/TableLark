@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import PollTopBar from "./PollTopBar";
 
 import {
   closePollRequest,
@@ -33,7 +33,15 @@ function formatTimeRemaining(deadlineAt, now) {
     : `${minutes}m ${seconds}s`;
 }
 
-function BallotForm({ poll, onSaved, onCancel }) {
+function VotingCountdown({ deadlineAt, now }) {
+  return (
+    <p className="poll-countdown">
+      Voting ends in <strong>{formatTimeRemaining(deadlineAt, now)}</strong>
+    </p>
+  );
+}
+
+function BallotForm({ poll, now, onSaved, onCancel }) {
   const rankCount = poll.options.length === 2 ? 1 : 3;
   const [name, setName] = useState(poll.ballot?.name ?? "");
   const [optionOrder, setOptionOrder] = useState(() => {
@@ -73,7 +81,7 @@ function BallotForm({ poll, onSaved, onCancel }) {
       });
       onSaved(result.poll);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Your picks could not be saved.");
+      setErrorMessage(error instanceof Error ? error.message : "Your votes could not be saved.");
     } finally {
       setIsSaving(false);
     }
@@ -113,9 +121,10 @@ function BallotForm({ poll, onSaved, onCancel }) {
       {errorMessage ? (
         <p className="poll-message poll-message--error" role="alert">{errorMessage}</p>
       ) : null}
+      <VotingCountdown deadlineAt={poll.deadlineAt} now={now} />
       <div className="poll-button-row">
         <button type="submit" disabled={isSaving || isDragging || chosenCount < rankCount}>
-          {isSaving ? "Saving…" : poll.ballot ? "Update my picks" : "Submit my picks"}
+          {isSaving ? "Saving…" : "Save votes"}
         </button>
         <button
           type="button"
@@ -138,7 +147,7 @@ function BallotForm({ poll, onSaved, onCancel }) {
     </form>
   );
 }
-function SavedBallot({ poll, onEdit }) {
+function SavedBallot({ poll, now, onEdit }) {
   const optionById = new Map(
     poll.options.map((option) => [option.id, option]),
   );
@@ -152,7 +161,8 @@ function SavedBallot({ poll, onEdit }) {
 
   return (
     <section className="poll-card">
-      <h2>Your picks are in</h2>
+      <h2>Your votes are saved</h2>
+      <VotingCountdown deadlineAt={poll.deadlineAt} now={now} />
       <ol className="poll-ranking-summary">
         {poll.ballot.rankings.map((ranking, index) => (
           <li key={ranking.optionId}>
@@ -174,7 +184,7 @@ function SavedBallot({ poll, onEdit }) {
       ) : null}
 
       <button type="button" className="secondary" onClick={onEdit}>
-        Edit your picks
+        Edit votes
       </button>
     </section>
   );
@@ -222,7 +232,7 @@ export default function PollExperience({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Lark Together could not be loaded.",
+          : "Group Favorite could not be loaded.",
       );
     } finally {
       setIsLoading(false);
@@ -272,20 +282,6 @@ export default function PollExperience({
     return () => window.clearInterval(timer);
   }, [isActive, loadPoll, status]);
 
-  const rankedOptions = useMemo(() => {
-    if (!poll?.ballot) {
-      return [];
-    }
-
-    const optionById = new Map(
-      poll.options.map((option) => [option.id, option]),
-    );
-
-    return poll.ballot.rankings
-      .map((ranking) => optionById.get(ranking.optionId))
-      .filter(Boolean);
-  }, [poll]);
-
   async function copyShareLink() {
     try {
       await navigator.clipboard.writeText(
@@ -304,7 +300,7 @@ export default function PollExperience({
   async function handleClosePoll() {
     if (
       !window.confirm(
-        "Finish choosing now? Unsubmitted picks and unsaved edits will no longer be accepted.",
+        "End voting now? Unsaved votes and edits will no longer be accepted.",
       )
     ) {
       return;
@@ -320,7 +316,7 @@ export default function PollExperience({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Lark Together could not be finished.",
+          : "Voting could not be ended.",
       );
     } finally {
       setIsActing(false);
@@ -346,14 +342,20 @@ export default function PollExperience({
   }
 
   if (isLoading) {
-    return <Container className={containerClassName}><p role="status">Loading Lark Together…</p></Container>;
+    return (
+      <Container className={containerClassName}>
+        {!embedded ? <PollTopBar /> : null}
+        <div className="poll-shell"><p role="status">Loading Group Favorite…</p></div>
+      </Container>
+    );
   }
 
   if (!poll) {
     return (
       <Container className={containerClassName}>
+        {!embedded ? <PollTopBar /> : null}
         <section className="poll-shell">
-          <Title>Lark Together unavailable</Title>
+          <Title>Group Favorite unavailable</Title>
           <p className="poll-message poll-message--error">{errorMessage}</p>
           <div className="poll-card">
             <button type="button" onClick={() => loadPoll()}>Try again</button>
@@ -370,7 +372,7 @@ export default function PollExperience({
         <section className="poll-card">
           <h2>Organizer controls unavailable</h2>
           <p role="alert">
-            {errorMessage || "This browser no longer has organizer access to this Lark Together."}
+            {errorMessage || "This browser no longer has organizer access to this Group Favorite."}
           </p>
           <Link href={sharePath} target="_blank" rel="noreferrer">
             Open the shared page
@@ -387,49 +389,29 @@ export default function PollExperience({
 
   return (
     <Container className={containerClassName}>
+      {!embedded ? <PollTopBar onShare={organizerPoll ? copyShareLink : undefined} copied={copied} /> : null}
       <section className="poll-shell">
+        {embedded && !isOpen ? (
         <header className="poll-page__header">
-          {embedded ? (
             <Link
               href={sharePath}
               className="poll-page__brand"
               target="_blank"
               rel="noreferrer"
             >
-              Open shared page
+              View results
             </Link>
-          ) : (
-            <Link href="/" className="poll-page__brand poll-page__home" aria-label="TableLark home">
-              <Image
-                className="poll-page__logo"
-                src="/tablelark-logo-classic.png"
-                alt=""
-                width={48}
-                height={48}
-                priority
-              />
-              <span className="poll-page__name">TableLark</span>
-            </Link>
-          )}
-          {organizerPoll ? (
-            <button type="button" className="secondary" onClick={copyShareLink}>
-              {copied ? "Link copied" : "Copy share link"}
-            </button>
-          ) : null}
         </header>
+        ) : null}
 
-        <div className="poll-card poll-card--intro">
-          <p className="poll-eyebrow">
-            {isOpen ? "Choosing is open" : "Choosing has ended"}
-          </p>
-          <Title>Choose the group’s restaurant</Title>
-          {isOpen ? (
-            <p>
-              Time remaining:{" "}
-              <strong>{formatTimeRemaining(poll.deadlineAt, now)}</strong>
-            </p>
-          ) : null}
-        </div>
+        {organizerPoll && isOpen ? (
+          <section className="poll-card poll-share">
+            <h2>Your poll is ready</h2>
+            <button type="button" onClick={copyShareLink}>
+              {copied ? "Link copied" : "Copy invite link"}
+            </button>
+          </section>
+        ) : null}
 
         {errorMessage ? (
           <p className="poll-message poll-message--error" role="alert">
@@ -456,17 +438,18 @@ export default function PollExperience({
 
         {poll.status === POLL_STATUS.NO_VOTES ? (
           <section className="poll-card">
-            <h2>No picks were submitted</h2>
-            <p>Lark Together ended without selecting a restaurant.</p>
+            <h2>No votes were saved</h2>
+            <p>Group Favorite ended without selecting a restaurant.</p>
           </section>
         ) : null}
 
         {isOpen && (!poll.ballot || isEditing) ? (
           <section className="poll-card">
-            <h2>{poll.ballot ? "Edit your picks" : "Rank your favorites"}</h2>
+            <h2>{poll.ballot ? "Edit votes" : "Rank your favorites"}</h2>
             <BallotForm
               key={poll.ballot?.updatedAt ?? "new-ballot"}
               poll={poll}
+              now={now}
               onSaved={(updatedPoll) => {
                 setPoll(updatedPoll);
                 setIsEditing(false);
@@ -481,13 +464,16 @@ export default function PollExperience({
 
         {isOpen && poll.ballot && !isEditing ? (
           <>
-            <SavedBallot poll={poll} onEdit={() => setIsEditing(true)} />
+            <SavedBallot poll={poll} now={now} onEdit={() => setIsEditing(true)} />
+            {!organizerPoll && !embedded ? (
             <section className="poll-card">
-              <h2>Waiting for the final decision</h2>
+              <h2>Waiting for results</h2>
               <p>
-                Your latest saved picks will be counted when choosing ends.
+                Your latest saved votes will be counted when voting ends.
+                Results will appear here automatically.
               </p>
             </section>
+            ) : null}
           </>
         ) : null}
 
@@ -516,12 +502,6 @@ export default function PollExperience({
           </section>
         ) : null}
 
-        {!isOpen && poll.ballot && rankedOptions.length > 0 ? (
-          <p className="poll-footnote">
-            Your saved picks contained {rankedOptions.length} ranked{" "}
-            {rankedOptions.length === 1 ? "restaurant" : "restaurants"}.
-          </p>
-        ) : null}
       </section>
     </Container>
   );

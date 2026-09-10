@@ -1,7 +1,7 @@
 import PollExperience from "@/components/polls/PollExperience";
 
 export const metadata = {
-  title: "Lark Together | TableLark",
+  title: "Group Favorite | TableLark",
   robots: { index: false, follow: false },
 };
 

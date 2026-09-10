@@ -50,7 +50,7 @@
 }
 
 .restaurant-info-window { max-width: 16rem; color: var(--color-map-info-text); }
-.restaurant-info-window h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+.restaurant-info-window__title { max-width: 16rem; margin: 0; color: var(--color-map-info-text); font-size: 1rem; overflow-wrap: anywhere; }
 .restaurant-info-window p { margin: 0.3rem 0; }
 
 .map-user-marker {

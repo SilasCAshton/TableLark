@@ -63,10 +63,21 @@ function TopActionBar() {
   return (
     <header
       ref={actionBarRef}
-      className="top-action-bar"
+      className={`top-action-bar${openMenu === "poll" ? " top-action-bar--poll-open" : ""}`}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
     >
+        <button
+          type="button"
+          className="poll-menu-backdrop"
+          aria-label="Close Group Favorite menu"
+          aria-hidden={openMenu !== "poll"}
+          tabIndex={-1}
+          onClick={() => {
+            setOpenMenu(null);
+            actionBarRef.current?.querySelector('[data-menu-trigger="poll"]')?.focus();
+          }}
+        />
       <Link className="topbar-brand" href="/" aria-label="TableLark home">
         <Image
           className="topbar-logo"

@@ -110,6 +110,14 @@ export async function countPollBallots(db, pollId) {
   return rows.length;
 }
 
+export function selectPollVoterNames(db, pollId) {
+  return db
+    .select({ name: ballots.optionalName })
+    .from(ballots)
+    .where(eq(ballots.pollId, pollId))
+    .orderBy(asc(ballots.createdAt), asc(ballots.id));
+}
+
 export async function saveBallot(
   tx,
   {

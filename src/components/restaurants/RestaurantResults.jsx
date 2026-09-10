@@ -23,7 +23,8 @@ function RestaurantCard({ restaurant }) {
     isFull,
   } = usePollBuilder();
   const {
-    selectedRestaurantId,
+    highlightedRestaurantId,
+    highlightRestaurant,
     selectRestaurant,
     minRating,
     minReviews,
@@ -31,7 +32,7 @@ function RestaurantCard({ restaurant }) {
   } = useRestaurantSearch();
 
   const isSelected =
-    selectedRestaurantId === restaurant.id;
+    highlightedRestaurantId === restaurant.id;
   const isInPoll = hasRestaurant(restaurant.id);
   const pollActionLabel = isInPoll
     ? "Remove from poll"
@@ -52,6 +53,10 @@ function RestaurantCard({ restaurant }) {
 
   return (
     <article
+      onClick={(event) => {
+        if (event.target.closest("button, a")) return;
+        highlightRestaurant(restaurant.id);
+      }}
       className={`restaurant-card ${
         isSelected
           ? "restaurant-card-selected"
