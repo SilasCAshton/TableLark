@@ -33,6 +33,16 @@ This document holds potential product and development ideas that are worth revis
 - **Possible approach:** Begin with a geographic midpoint and nearby restaurant search. A later version could offer several midpoint candidates or use estimated travel time to find a fairer meeting area.
 - **Decision:** Explore the desired midpoint and travel-time behavior before planning implementation.
 
+#### Advanced app-based group version
+
+- **Added:** September 12, 2026
+- **Idea:** Let an organizer create a Meet in the Middle session and send an invitation link to one or more friends. Each participant opens the link in the app and explicitly shares their current location or enters a starting location, connecting everyone to the same planning session.
+- **Group flow:** Support more than two participants, calculate one or more practical central meeting areas from everyone's starting point, build a shared restaurant shortlist around the selected area, and let the group vote on the final choice.
+- **App benefit:** A dedicated app experience could provide reliable invitations and notifications when someone joins, locations are ready, a shared list is available, voting is about to close, or a winner has been selected.
+- **Privacy and safety:** Location sharing must be opt-in and clearly scoped to the active session. Avoid revealing participants' precise locations to one another by default, minimize how long location data is retained, allow participants to leave or revoke access, and expire abandoned sessions and invitation links.
+- **Possible approach:** Use an expiring shared-session link, participant presence and consent states, a server-side midpoint or travel-time calculation, and real-time session updates. Reuse the ranked restaurant polling system for the shared shortlist and final vote where practical.
+- **Decision:** Treat this as a later app-focused evolution of the basic two-location feature. Define location privacy, session ownership, notification behavior, participant limits, and travel-time fairness before implementation.
+
 ### Custom search presets
 
 - **Status:** New

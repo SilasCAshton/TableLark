@@ -11,6 +11,7 @@ import {
 } from "@vis.gl/react-google-maps";
 
 import { useLocation } from "@/context/LocationContext";
+import { useMapViewport } from "@/context/MapViewportContext";
 import { usePollBuilder } from "@/context/PollBuilderContext";
 import { POLL_RESTAURANT_COLOR } from "@/lib/restaurants/poll-appearance";
 import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
@@ -80,13 +81,41 @@ function MapPositionController({
   selectedRestaurant,
 }) {
   const map = useMap();
+  const { visibleMapCenter } = useMapViewport();
+  const lastCameraTarget = useRef(null);
+
+  function panToVisibleCenter(location) {
+    if (!map || !location) return;
+
+    lastCameraTarget.current = location;
+    const projection = map.getProjection();
+    if (!projection || !visibleMapCenter) {
+      map.panTo(location);
+      return;
+    }
+
+    const mapBounds = map.getDiv().getBoundingClientRect();
+    const point = projection.fromLatLngToPoint(
+      new window.google.maps.LatLng(location),
+    );
+    if (!point) return;
+
+    const scale = 2 ** (map.getZoom() ?? 12);
+    point.x += (mapBounds.width / 2 - visibleMapCenter.x) / scale;
+    point.y += (mapBounds.height / 2 - visibleMapCenter.y) / scale;
+    const center = projection.fromPointToLatLng(point);
+    if (center) map.panTo(center);
+  }
 
   useEffect(() => {
     if (!map || !searchCenter) {
       return;
     }
 
-    map.panTo(searchCenter);
+    panToVisibleCenter(searchCenter);
+    // This effect represents a new search-location camera request. Viewport
+    // changes are handled separately using the last requested target.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, searchCenter]);
 
   useEffect(() => {
@@ -101,55 +130,15 @@ function MapPositionController({
       map.setZoom(targetZoom);
     }
 
-    const mapElement = map.getDiv();
-    const layout = mapElement.closest(".restaurant-finder-layout");
-    const topbar = layout?.querySelector(".top-action-bar");
-    const panel = layout?.querySelector(".restaurant-sidebar");
-
-    function centerRestaurant() {
-      const projection = map.getProjection();
-      if (!window.matchMedia("(max-width: 720px)").matches ||
-          !projection || !topbar || !panel) {
-        map.panTo(selectedRestaurant.location);
-        return;
-      }
-
-      const mapBounds = mapElement.getBoundingClientRect();
-      const visibleTop = Math.max(mapBounds.top, topbar.getBoundingClientRect().bottom);
-      const visibleBottom = Math.min(mapBounds.bottom, panel.getBoundingClientRect().top);
-      if (visibleBottom <= visibleTop) {
-        map.panTo(selectedRestaurant.location);
-        return;
-      }
-
-      const point = projection.fromLatLngToPoint(
-        new window.google.maps.LatLng(selectedRestaurant.location),
-      );
-      if (!point) return;
-
-      // Move the camera below the restaurant so its pin lands in the visible gap.
-      const targetY = (visibleTop + visibleBottom) / 2 - mapBounds.top;
-      const scale = 2 ** (map.getZoom() ?? targetZoom);
-      point.y += (mapBounds.height / 2 - targetY) / scale;
-      const center = projection.fromPointToLatLng(point);
-      if (center) map.panTo(center);
-    }
-
-    centerRestaurant();
-    const projectionListener = map.addListener("projection_changed", centerRestaurant);
-    // Also follow changes to the mobile panel height, including its transition.
-    const observer = new ResizeObserver(centerRestaurant);
-    observer.observe(mapElement);
-    if (topbar) observer.observe(topbar);
-    if (panel) observer.observe(panel);
-    window.addEventListener("resize", centerRestaurant);
-
-    return () => {
-      projectionListener.remove();
-      observer.disconnect();
-      window.removeEventListener("resize", centerRestaurant);
-    };
+    panToVisibleCenter(selectedRestaurant.location);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, selectedRestaurant]);
+
+  useEffect(() => {
+    if (!map || !visibleMapCenter || !lastCameraTarget.current) return;
+    panToVisibleCenter(lastCameraTarget.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, visibleMapCenter]);
 
   return null;
 }

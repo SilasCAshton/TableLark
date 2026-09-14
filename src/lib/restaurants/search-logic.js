@@ -1,4 +1,5 @@
 import { isChainRestaurant } from "./chain-filter.js";
+import { normalizeMealServices } from "./bakery-deli-filter.js";
 import {
   DEFAULT_MAX_REVIEWS,
   DEFAULT_MIN_REVIEWS,
@@ -91,6 +92,8 @@ export function normalizePlace(place) {
         : null,
     priceLevel: normalizePriceLevel(place.priceLevel),
     primaryType: place.primaryType ?? null,
+    types: Array.isArray(place.types) ? [...place.types] : [],
+    mealServices: normalizeMealServices(place),
     primaryTypeDisplayName:
       place.primaryTypeDisplayName?.text ?? null,
     iconMaskBaseURI: place.iconMaskBaseUri ?? null,

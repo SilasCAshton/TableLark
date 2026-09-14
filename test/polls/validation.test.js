@@ -12,6 +12,8 @@ const restaurants = [
     name: "A",
     address: "1 Main Street",
     primaryTypeDisplayName: "Italian restaurant",
+    rating: 4.6,
+    priceLevel: "MODERATE",
     googleMapsURI: "https://maps.google.com/?cid=1",
   },
   {
@@ -37,6 +39,8 @@ test("validates a two-restaurant poll configuration", () => {
     poll.restaurants[0].primaryTypeDisplayName,
     "Italian restaurant",
   );
+  assert.equal(poll.restaurants[0].rating, 4.6);
+  assert.equal(poll.restaurants[0].priceLevel, "MODERATE");
 });
 
 test("rejects duplicate restaurant place IDs", () => {

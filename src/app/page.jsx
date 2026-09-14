@@ -28,7 +28,7 @@ export default function HomePage() {
         </header>
 
         <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Your next favorite place might be nearby</p>
+          <p className="home-hero__eyebrow">Your next favorite place might be right around the corner</p>
           <h1 id="home-title">Let's find somewhere worth going.</h1>
           <p className="home-hero__intro">
             Whether you’re in the mood for a familiar favorite or 

@@ -17,6 +17,7 @@ import SortableRestaurantList from "./SortableRestaurantList";
 import { moveRestaurantInOrder } from "@/lib/polls/ranking";
 import { pollSharePath, rememberActivePoll } from "@/lib/polls/active-poll";
 import PollOrganizerControls, { PollTieDecision } from "./PollOrganizerControls";
+import PollResults from "./PollResults";
 
 function formatTimeRemaining(deadlineAt, now) {
   const milliseconds = Math.max(
@@ -420,20 +421,23 @@ export default function PollExperience({
         ) : null}
 
         {poll.status === POLL_STATUS.FINAL && poll.winner ? (
-          <section className="poll-card poll-winner">
-            <p className="poll-eyebrow">The group chose</p>
-            <h2>{poll.winner.name}</h2>
-            <p>{poll.winner.address}</p>
-            {poll.winner.googleMapsURI ? (
-              <a
-                href={poll.winner.googleMapsURI}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open in Google Maps
-              </a>
-            ) : null}
-          </section>
+          <>
+            <section className="poll-card poll-winner">
+              <p className="poll-eyebrow">The group chose</p>
+              <h2>{poll.winner.name}</h2>
+              <p>{poll.winner.address}</p>
+              {poll.winner.googleMapsURI ? (
+                <a
+                  href={poll.winner.googleMapsURI}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open in Google Maps
+                </a>
+              ) : null}
+            </section>
+            <PollResults results={poll.results} winnerId={poll.winner.id} />
+          </>
         ) : null}
 
         {poll.status === POLL_STATUS.NO_VOTES ? (

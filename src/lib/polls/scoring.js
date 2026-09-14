@@ -12,6 +12,7 @@ export function calculatePollOutcome(optionIds, rankings) {
       {
         optionId,
         points: 0,
+        voteCount: 0,
         favoriteCount: 0,
         secondFavoriteCount: 0,
         thirdFavoriteCount: 0,
@@ -27,6 +28,7 @@ export function calculatePollOutcome(optionIds, rankings) {
     }
 
     score.points += 4 - ranking.rank;
+    score.voteCount += 1;
 
     if (ranking.rank === 1) {
       score.favoriteCount += 1;
@@ -67,4 +69,20 @@ export function calculatePollOutcome(optionIds, rankings) {
     candidateIds,
     scores: [...scores.values()],
   };
+}
+
+export function calculatePollResults(optionIds, rankings) {
+  const optionOrder = new Map(
+    optionIds.map((optionId, index) => [optionId, index]),
+  );
+
+  return calculatePollOutcome(optionIds, rankings).scores.sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.favoriteCount - a.favoriteCount ||
+      b.secondFavoriteCount - a.secondFavoriteCount ||
+      b.thirdFavoriteCount - a.thirdFavoriteCount ||
+      b.voteCount - a.voteCount ||
+      optionOrder.get(a.optionId) - optionOrder.get(b.optionId),
+  );
 }

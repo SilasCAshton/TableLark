@@ -7,6 +7,7 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
+  real,
   smallint,
   timestamp,
   unique,
@@ -88,6 +89,8 @@ export const pollOptions = pgTable(
     primaryTypeDisplayName: varchar("primary_type_display_name", {
       length: 120,
     }),
+    rating: real("rating"),
+    priceLevel: varchar("price_level", { length: 32 }),
     googleMapsUrl: varchar("google_maps_url", {
       length: 2048,
     }),

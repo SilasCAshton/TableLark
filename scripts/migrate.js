@@ -110,5 +110,7 @@ const isMainModule =
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMainModule) {
-  await migrateDatabase(process.env.DATABASE_URL);
+  await migrateDatabase(
+    process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL,
+  );
 }

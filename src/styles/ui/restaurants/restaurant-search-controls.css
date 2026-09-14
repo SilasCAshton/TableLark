@@ -2,8 +2,8 @@
 .restaurant-settings { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-surface); overflow: hidden; }
 .restaurant-settings summary { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-2); min-height: 2.8rem; padding: 0.6rem 0.75rem; color: var(--color-heading); list-style: none; user-select: none; }
 .restaurant-settings summary::-webkit-details-marker { display: none; }
-.restaurant-settings summary::after { content: "+"; display: grid; place-items: center; width: 1.5rem; aspect-ratio: 1; color: var(--color-primary); border-radius: 50%; background: var(--color-surface-highlight); font-size: 1.1rem; font-weight: 700; line-height: 1; }
-.restaurant-settings[open] summary::after { content: "−"; }
+.restaurant-settings summary::after { width: 0.45rem; height: 0.45rem; margin: 0.25rem; border-right: 2px solid var(--color-primary); border-bottom: 2px solid var(--color-primary); content: ""; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--transition-fast); }
+.restaurant-settings[open] summary::after { transform: translateY(0.12rem) rotate(225deg); }
 .restaurant-settings summary:hover { background: var(--color-card-hover); }
 .restaurant-settings-title { font-size: 0.86rem; font-weight: 800; }
 .restaurant-settings-summary { min-width: 0; overflow: hidden; color: var(--color-muted-text); font-size: 0.74rem; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
