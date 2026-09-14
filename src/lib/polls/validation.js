@@ -107,6 +107,35 @@ function readOptionalHttpsUrl(value) {
   return url.toString();
 }
 
+function readOptionalRating(value, label) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 5) {
+    throw new PollValidationError(`${label} must be a number between 0 and 5.`);
+  }
+
+  return value;
+}
+
+function readOptionalPriceLevel(value, label) {
+  const priceLevel = readOptionalText(value, label, 32);
+  const allowedLevels = new Set([
+    "FREE",
+    "INEXPENSIVE",
+    "MODERATE",
+    "EXPENSIVE",
+    "VERY_EXPENSIVE",
+  ]);
+
+  if (priceLevel !== null && !allowedLevels.has(priceLevel)) {
+    throw new PollValidationError(`${label} is not recognized.`);
+  }
+
+  return priceLevel;
+}
+
 function validateRestaurant(restaurant, index) {
   requireObject(
     restaurant,
@@ -133,6 +162,14 @@ function validateRestaurant(restaurant, index) {
       restaurant.primaryTypeDisplayName,
       `Restaurant ${index + 1} primary cuisine type`,
       120,
+    ),
+    rating: readOptionalRating(
+      restaurant.rating,
+      `Restaurant ${index + 1} rating`,
+    ),
+    priceLevel: readOptionalPriceLevel(
+      restaurant.priceLevel,
+      `Restaurant ${index + 1} price range`,
     ),
     googleMapsUrl: readOptionalHttpsUrl(
       restaurant.googleMapsURI,

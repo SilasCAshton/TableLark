@@ -26,7 +26,7 @@ import {
   selectTieCandidateIds,
   updatePollClosure,
 } from "./repository.js";
-import { calculatePollOutcome } from "./scoring.js";
+import { calculatePollOutcome, calculatePollResults } from "./scoring.js";
 import {
   createPrivateToken,
   createPublicSlug,
@@ -60,8 +60,28 @@ function publicOption(option) {
     name: option.name,
     address: option.address,
     primaryTypeDisplayName: option.primaryTypeDisplayName,
+    rating: option.rating,
+    priceLevel: option.priceLevel,
     googleMapsURI: option.googleMapsUrl,
   };
+}
+
+async function buildResults(tx, poll, options) {
+  if (poll.status === POLL_STATUS.OPEN) {
+    return undefined;
+  }
+
+  const rankings = await selectAllPollRankings(tx, poll.id);
+  const rankedScores = calculatePollResults(
+    options.map((option) => option.id),
+    rankings,
+  );
+  const optionById = new Map(options.map((option) => [option.id, option]));
+
+  return rankedScores.map((score) => ({
+    ...publicOption(optionById.get(score.optionId)),
+    ...score,
+  }));
 }
 
 async function closePoll(tx, poll, reason, now) {
@@ -141,6 +161,7 @@ async function buildParticipantView(
     tx,
     poll.winnerOptionId,
   );
+  const results = await buildResults(tx, poll, options);
 
   return {
     slug: poll.publicSlug,
@@ -155,6 +176,7 @@ async function buildParticipantView(
         }
       : null,
     winner: winner ? publicOption(winner) : null,
+    results,
   };
 }
 
@@ -171,6 +193,7 @@ async function buildOrganizerView(tx, poll) {
     tx,
     poll.winnerOptionId,
   );
+  const results = await buildResults(tx, poll, options);
 
   return {
     slug: poll.publicSlug,
@@ -187,6 +210,7 @@ async function buildOrganizerView(tx, poll) {
       .filter(Boolean)
       .map(publicOption),
     winner: winner ? publicOption(winner) : null,
+    results,
   };
 }
 

@@ -1,4 +1,5 @@
 import { searchNearbyPlaces } from "./places-client";
+import { filterBakeriesAndDelis } from "./bakery-deli-filter.js";
 import {
   deduplicateWithinRadius,
   filterAndScoreHiddenGems,
@@ -8,7 +9,7 @@ import {
 const METERS_PER_MILE = 1609.344;
 const MIN_SUBDIVIDED_RADIUS_METERS =
   0.5 * METERS_PER_MILE;
-const MAX_SUBDIVIDED_REQUESTS = 16;
+const MAX_SUBDIVIDED_REQUESTS = 8;
 
 async function searchSingleArea(search, signal) {
   const restaurants = await searchNearbyPlaces({
@@ -16,6 +17,7 @@ async function searchSingleArea(search, signal) {
     radiusMeters: search.radiusMeters,
     includedTypes: search.filters.includedTypes,
     includedPrimaryTypes: search.filters.includedPrimaryTypes,
+    presetId: search.filters.presetId,
     maxResults: search.filters.maxResults,
     rankPreference:
       search.mode === "popular"
@@ -54,6 +56,7 @@ async function searchHiddenGems(search, signal) {
       radiusMeters,
       includedTypes: search.filters.includedTypes,
       includedPrimaryTypes: search.filters.includedPrimaryTypes,
+      presetId: search.filters.presetId,
       maxResults: search.filters.maxResults,
       rankPreference: "DISTANCE",
       signal,
@@ -149,12 +152,17 @@ async function searchHiddenGems(search, signal) {
 }
 
 export async function searchRestaurants(search, signal) {
-  if (search.mode === "hidden") {
-    return searchHiddenGems(search, signal);
-  }
+  const result = search.mode === "hidden"
+    ? await searchHiddenGems(search, signal)
+    : {
+        restaurants: await searchSingleArea(search, signal),
+        requestCount: 1,
+      };
 
+  // Apply after collection so removed places do not hide saturated Google
+  // responses and prematurely stop Hidden Gems subdivision.
   return {
-    restaurants: await searchSingleArea(search, signal),
-    requestCount: 1,
+    ...result,
+    restaurants: filterBakeriesAndDelis(result.restaurants, search.filters.presetId),
   };
 }

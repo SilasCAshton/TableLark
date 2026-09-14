@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { calculatePollOutcome } from "../../src/lib/polls/scoring.js";
+import { calculatePollOutcome, calculatePollResults } from "../../src/lib/polls/scoring.js";
 
 test("scores rankings with 3, 2, and 1 points", () => {
   const outcome = calculatePollOutcome(
@@ -22,14 +22,40 @@ test("scores rankings with 3, 2, and 1 points", () => {
   assert.equal(outcome.kind, "winner");
   assert.equal(outcome.winnerOptionId, "a");
   assert.deepEqual(
+    Object.fromEntries(outcome.scores.map((score) => [score.optionId, score.voteCount])),
+    { a: 3, b: 3, c: 3 },
+  );
+  assert.deepEqual(
     outcome.scores.find((score) => score.optionId === "a"),
     {
       optionId: "a",
       points: 8,
+      voteCount: 3,
       favoriteCount: 2,
       secondFavoriteCount: 1,
       thirdFavoriteCount: 0,
     },
+  );
+});
+
+test("orders results by weighted points", () => {
+  const results = calculatePollResults(
+    ["a", "b", "c"],
+    [
+      { optionId: "a", rank: 1 },
+      { optionId: "b", rank: 3 },
+      { optionId: "b", rank: 3 },
+      { optionId: "c", rank: 3 },
+    ],
+  );
+
+  assert.deepEqual(
+    results.map(({ optionId, points }) => ({ optionId, points })),
+    [
+      { optionId: "a", points: 3 },
+      { optionId: "b", points: 2 },
+      { optionId: "c", points: 1 },
+    ],
   );
 });
 

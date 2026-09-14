@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "description": "Curated U.S. restaurant-chain exclusion list for Hidden Gem searches.",
-    "updated": "2026-08-13",
+    "description": "Curated U.S. restaurant and prepared-food chain exclusion list for Hidden Gem searches.",
+    "updated": "2026-09-14",
     "locationCountNote": "approximateUsLocations is rounded context only and is never used to decide whether a search result is a chain. Counts change continuously and can differ based on whether licensed, nontraditional, or temporarily closed locations are included.",
-    "selectionNote": "The list emphasizes large national chains and sizeable regional chains found in national rankings or state-level footprint data. Inclusion is intentionally conservative: a listed alias is excluded, while an unknown restaurant is not inferred to be a chain merely because its name resembles one.",
+    "selectionNote": "The list emphasizes large national chains and sizeable regional chains found in national rankings or state-level footprint data, including Northeast convenience stores with substantial prepared-food operations. Inclusion is intentionally conservative: a listed alias is excluded, while an unknown restaurant is not inferred to be a chain merely because its name resembles one.",
     "sources": [
       {
         "id": "qsr50-2025",
@@ -40,6 +40,24 @@
         "title": "Largest Fast Food Chains in the US",
         "url": "https://www.withorbital.com/data/largest-fast-food-chains-in-the-us/",
         "use": "Recent storefront-count cross-check for the largest quick-service brands."
+      },
+      {
+        "id": "csp-top-202-2025",
+        "title": "CSP Top 202 Convenience Stores 2025",
+        "url": "https://www.cspdailynews.com/top-202-convenience-stores-2025",
+        "use": "Primary source for large convenience-store chains, including Northeast prepared-food destinations such as Wawa and Sheetz."
+      },
+      {
+        "id": "nacs-top-100-2025",
+        "title": "NACS Top 100 Convenience Retailers of 2025",
+        "url": "https://www.nacsmagazine.com/Issues/March-2025/Top-100-Convenience-Retailers-of-2025",
+        "use": "Cross-check for major convenience retailers and regional brands such as QuickChek."
+      },
+      {
+        "id": "qsr-regional-chain-reporting-2025",
+        "title": "QSR Magazine 2025 Regional Chain Reporting",
+        "url": "https://www.qsrmagazine.com/",
+        "use": "Cross-check for growing Northeast restaurant and snack chains including Philly Pretzel Factory, PrimoHoagies, Chopt, and Just Salad."
       }
     ]
   },
@@ -208,6 +226,23 @@
     { "name": "Wingstop", "aliases": ["Wingstop"], "approximateUsLocations": 2300, "category": "chicken" },
     { "name": "Yard House", "aliases": ["Yard House"], "approximateUsLocations": 90, "category": "casual-dining" },
     { "name": "Zaxby's", "aliases": ["Zaxby's", "Zaxbys"], "approximateUsLocations": 980, "category": "chicken" },
+    { "name": "CAVA", "aliases": ["CAVA", "CAVA Mezze", "CAVA Grill"], "approximateUsLocations": 439, "category": "fast-casual" },
+    { "name": "Chopt Creative Salad Co.", "aliases": ["Chopt", "Chop't", "Chopt Creative Salad Co.", "Chopt Creative Salad Company"], "approximateUsLocations": 90, "category": "fast-casual" },
+    { "name": "Cumberland Farms", "aliases": ["Cumberland Farms", "Cumberland Farm"], "approximateUsLocations": 643, "category": "convenience-store" },
+    { "name": "Friendly's", "aliases": ["Friendly's", "Friendlys", "Friendly's Restaurant", "Friendly's Restaurant & Ice Cream"], "approximateUsLocations": 100, "category": "family-dining" },
+    { "name": "GetGo Café + Market", "aliases": ["GetGo", "GetGo Cafe + Market", "GetGo Café + Market", "GetGo Cafe and Market"], "approximateUsLocations": 270, "category": "convenience-store" },
+    { "name": "honeygrow", "aliases": ["honeygrow", "Honeygrow"], "approximateUsLocations": 54, "category": "fast-casual" },
+    { "name": "Just Salad", "aliases": ["Just Salad"], "approximateUsLocations": 100, "category": "fast-casual" },
+    { "name": "Philly Pretzel Factory", "aliases": ["Philly Pretzel Factory", "Philadelphia Pretzel Factory"], "approximateUsLocations": 170, "category": "snack" },
+    { "name": "Playa Bowls", "aliases": ["Playa Bowls", "Playa Bowl"], "approximateUsLocations": 400, "category": "fast-casual" },
+    { "name": "PrimoHoagies", "aliases": ["PrimoHoagies", "Primo Hoagies", "Primo Hoagies Italian Specialty Sandwiches"], "approximateUsLocations": 120, "category": "sandwich" },
+    { "name": "QuickChek", "aliases": ["QuickChek", "Quick Chek", "QuickChek Fresh Convenience"], "approximateUsLocations": 150, "category": "convenience-store" },
+    { "name": "Royal Farms", "aliases": ["Royal Farms", "RoFo"], "approximateUsLocations": 300, "category": "convenience-store" },
+    { "name": "Rutter's", "aliases": ["Rutter's", "Rutters", "Rutter's Farm Stores", "Rutter's Farm Store"], "approximateUsLocations": 90, "category": "convenience-store" },
+    { "name": "Sheetz", "aliases": ["Sheetz"], "approximateUsLocations": 770, "category": "convenience-store" },
+    { "name": "Stewart's Shops", "aliases": ["Stewart's Shops", "Stewarts Shops", "Stewart's Shop"], "approximateUsLocations": 400, "category": "convenience-store" },
+    { "name": "Turkey Hill", "aliases": ["Turkey Hill", "Turkey Hill Minit Markets", "Turkey Hill Minit Market"], "approximateUsLocations": 255, "category": "convenience-store" },
+    { "name": "Wawa", "aliases": ["Wawa", "Wawa Food Market"], "approximateUsLocations": 1100, "category": "convenience-store" },
     { "name": "&pizza", "aliases": ["&pizza", "andpizza"], "approximateUsLocations": 55, "category": "pizza" },
     { "name": "bb.q Chicken", "aliases": ["bb.q Chicken", "bbq Chicken"], "approximateUsLocations": 250, "category": "chicken" }
   ]

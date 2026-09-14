@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 const MAX_REQUEST_BODY_BYTES = 10000;
 const RATE_LIMIT_WINDOW_MS = 60000;
-const RATE_LIMIT_REQUESTS = 12;
+const RATE_LIMIT_REQUESTS = 8;
 const requestWindows = new Map();
 
 function getClientIdentifier(request) {

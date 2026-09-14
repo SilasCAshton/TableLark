@@ -12,11 +12,19 @@ test("defines ordered built-in restaurant search presets", () => {
     RESTAURANT_SEARCH_PRESETS.map((preset) => preset.name),
     [
       "Everything",
-      "Coffee & Brunch",
-      "American & Casual",
-      "Asian",
-      "European & Mediterranean",
+      "Coffee & Breakfast",
+      "American & Comfort Food",
+      "East & Southeast Asian",
+      "Indian & South Asian",
       "Latin & Caribbean",
+      "European",
+      "Mediterranean & Middle Eastern",
+      "African",
+      "Pizza & Sandwiches",
+      "Seafood",
+      "Desserts & Treats",
+      "Bars & Pubs",
+      "Vegetarian & Lighter Meals",
     ],
   );
 });
@@ -34,6 +42,11 @@ test("each search preset has a unique id, name, and Google types", () => {
         preset.includedPrimaryTypes.length > 0,
     );
     assert.equal(ids.has(preset.id), false);
+    assert.ok(preset.includedPrimaryTypes.length <= 50);
+    assert.equal(
+      new Set(preset.includedPrimaryTypes).size,
+      preset.includedPrimaryTypes.length,
+    );
     ids.add(preset.id);
   }
 });

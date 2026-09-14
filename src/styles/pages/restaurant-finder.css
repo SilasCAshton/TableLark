@@ -48,11 +48,11 @@
   }
 
   .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed) {
-    height: 17rem;
-  }
-
-  .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed):has(.restaurant-settings[open]) {
-    height: min(50dvh, 30.5rem);
+    /* Keep the bottom anchored while the search form grows upward. */
+    height: auto;
+    max-height: calc(100dvh - var(--top-action-bar-height) - (var(--floating-panel-gap) * 3) - var(--space-3));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .restaurant-sidebar--search-tab .nearby-restaurant-search,
@@ -64,6 +64,11 @@
   .restaurant-sidebar--search-tab .restaurant-search-content,
   .restaurant-sidebar--search-tab .restaurant-mobile-tab-panel--active {
     flex: 0 0 auto;
+  }
+
+  .restaurant-sidebar--search-tab .restaurant-settings-grid {
+    max-height: none;
+    overflow: visible;
   }
 }
 

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { normalizePlace } from "./search-logic";
+import { getBakeryDeliFields } from "./bakery-deli-filter.js";
 
 const PLACES_NEARBY_SEARCH_URL =
   "https://places.googleapis.com/v1/places:searchNearby";
@@ -34,6 +35,7 @@ export async function searchNearbyPlaces({
   radiusMeters,
   includedTypes,
   includedPrimaryTypes,
+  presetId,
   maxResults,
   rankPreference,
   signal,
@@ -62,7 +64,10 @@ export async function searchNearbyPlaces({
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": PLACE_FIELD_MASK,
+        "X-Goog-FieldMask": [
+          PLACE_FIELD_MASK,
+          ...getBakeryDeliFields(presetId),
+        ].join(","),
       },
       body: JSON.stringify({
         languageCode: "en",

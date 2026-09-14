@@ -33,6 +33,8 @@ const restaurants = [
     name: "Alpha Cafe",
     address: "1 Main Street",
     primaryTypeDisplayName: "Cafe",
+    rating: 4.7,
+    priceLevel: "MODERATE",
     googleMapsURI: "https://maps.google.com/?cid=1",
   },
   {
@@ -100,6 +102,8 @@ databaseTest("creates a private poll view without exposing organizer data", asyn
 
   assert.equal(participant.options.length, 3);
   assert.equal(participant.options[0].primaryTypeDisplayName, "Cafe");
+  assert.equal(participant.options[0].rating, 4.7);
+  assert.equal(participant.options[0].priceLevel, "MODERATE");
   assert.equal(participant.ballot, null);
   assert.equal(participant.acceptedBallots, undefined);
   assert.equal(participant.maximumBallots, undefined);
@@ -229,6 +233,12 @@ databaseTest("persists an organizer-selected result after a complete tie", async
 
   assert.equal(resolved.status, "final");
   assert.equal(publicResult.winner.id, b);
+  assert.equal(publicResult.results.length, 3);
+  assert.equal(publicResult.results[0].voteCount, 2);
+  assert.equal(
+    publicResult.results.find((result) => result.id === a).rating,
+    4.7,
+  );
 });
 
 databaseTest("closes an expired poll without inventing a winner", async () => {

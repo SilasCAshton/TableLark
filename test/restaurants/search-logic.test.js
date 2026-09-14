@@ -121,6 +121,15 @@ test("recognizes chain aliases and branch suffixes", () => {
     findRestaurantChain("Applebee's - Doylestown")?.name,
     "Applebee's",
   );
+  assert.equal(findRestaurantChain("Wawa #8121")?.name, "Wawa");
+  assert.equal(
+    findRestaurantChain("Philly Pretzel Factory - Bensalem")?.name,
+    "Philly Pretzel Factory",
+  );
+  assert.equal(
+    findRestaurantChain("GetGo Cafe + Market")?.name,
+    "GetGo Café + Market",
+  );
   assert.equal(isChainRestaurant({ name: "Starbucks" }), true);
 });
 
