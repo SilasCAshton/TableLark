@@ -19,8 +19,8 @@ The Finder starts in New Orleans by default and lets the user replace that locat
 
 The restaurant search supports two modes:
 
-- **Popular** asks Google Places for a popularity-ranked result set and can enforce a minimum rating.
-- **Hidden gems** filters for highly rated restaurants within a configurable review-count range. The server can subdivide the search area and make multiple bounded Google Places requests to find more candidates before scoring and deduplicating them.
+- **Popular** asks Google Places for a popularity-ranked candidate set. Rating and maximum-price controls filter those candidates immediately in the browser.
+- **Hidden gems** filters independent restaurants within a configurable review-count range. The server can subdivide the search area and make multiple bounded Google Places requests before scoring and deduplicating candidates. A 4.0+ rating earns the hidden-gem badge, while lower rating settings can reveal additional ranked candidates.
 
 Users can also choose a built-in category preset and a search radius from 1 to 20 miles. Selecting a result centers the map on that restaurant and opens a summary window. Links to the corresponding Google Maps listing are included when Google supplies them.
 

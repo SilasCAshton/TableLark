@@ -13,13 +13,13 @@ Coffee & Breakfast uses a narrower check: an associated cafe, coffee_shop,
 breakfast_restaurant, or brunch_restaurant type, OR explicitly true breakfast
 or brunch service. Lunch-only evidence does not qualify.
 
-Desserts & Treats retains standalone bakeries. Other primary types are unchanged.
-Generic food/store labels do not qualify. Missing or false meal attributes do
+Other primary types are unchanged. Generic food/store labels do not qualify.
+Missing or false meal attributes do
 not qualify, but a matching associated type can still qualify a place.
 Seating and takeaway are not requirements.
 
 Only presets explicitly searching bakery or deli request the extra types and
-meal-service fields, excluding Desserts & Treats. Those meal-service fields
+meal-service fields. Those meal-service fields
 trigger Google's Enterprise + Atmosphere pricing. No extra API calls are added.
 
 Both Popular and Hidden Gems apply the check after result collection. Hidden

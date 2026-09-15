@@ -78,33 +78,63 @@ function AnimatedRestaurantPin({ restaurant, isInPoll, isSelected }) {
 
 function MapPositionController({
   searchCenter,
+  searchRequestVersion,
   selectedRestaurant,
 }) {
   const map = useMap();
-  const { visibleMapCenter } = useMapViewport();
-  const lastCameraTarget = useRef(null);
+  const { visibleMapViewport } = useMapViewport();
+  const previousVisibleMapViewport = useRef(null);
 
   function panToVisibleCenter(location) {
     if (!map || !location) return;
 
-    lastCameraTarget.current = location;
     const projection = map.getProjection();
-    if (!projection || !visibleMapCenter) {
+    if (!projection || !visibleMapViewport) {
       map.panTo(location);
       return;
     }
 
-    const mapBounds = map.getDiv().getBoundingClientRect();
     const point = projection.fromLatLngToPoint(
       new window.google.maps.LatLng(location),
     );
     if (!point) return;
 
     const scale = 2 ** (map.getZoom() ?? 12);
-    point.x += (mapBounds.width / 2 - visibleMapCenter.x) / scale;
-    point.y += (mapBounds.height / 2 - visibleMapCenter.y) / scale;
+    point.x += (
+      visibleMapViewport.mapSize.width / 2 -
+      visibleMapViewport.center.x
+    ) / scale;
+    point.y += (
+      visibleMapViewport.mapSize.height / 2 -
+      visibleMapViewport.center.y
+    ) / scale;
     const center = projection.fromPointToLatLng(point);
     if (center) map.panTo(center);
+  }
+
+  function compensateForViewportChange(previousViewport, nextViewport) {
+    const projection = map?.getProjection();
+    const currentCenter = map?.getCenter();
+    if (!projection || !currentCenter) return;
+
+    const point = projection.fromLatLngToPoint(currentCenter);
+    if (!point) return;
+
+    const scale = 2 ** (map.getZoom() ?? 12);
+    const previousOffset = {
+      x: previousViewport.center.x - previousViewport.mapSize.width / 2,
+      y: previousViewport.center.y - previousViewport.mapSize.height / 2,
+    };
+    const nextOffset = {
+      x: nextViewport.center.x - nextViewport.mapSize.width / 2,
+      y: nextViewport.center.y - nextViewport.mapSize.height / 2,
+    };
+
+    point.x += (previousOffset.x - nextOffset.x) / scale;
+    point.y += (previousOffset.y - nextOffset.y) / scale;
+
+    const center = projection.fromPointToLatLng(point);
+    if (center) map.setCenter(center);
   }
 
   useEffect(() => {
@@ -114,9 +144,18 @@ function MapPositionController({
 
     panToVisibleCenter(searchCenter);
     // This effect represents a new search-location camera request. Viewport
-    // changes are handled separately using the last requested target.
+    // changes preserve the current view separately.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, searchCenter]);
+
+  useEffect(() => {
+    if (!map || !searchCenter || searchRequestVersion === 0) {
+      return;
+    }
+
+    panToVisibleCenter(searchCenter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, searchRequestVersion]);
 
   useEffect(() => {
     if (!map || !selectedRestaurant?.location) {
@@ -135,10 +174,19 @@ function MapPositionController({
   }, [map, selectedRestaurant]);
 
   useEffect(() => {
-    if (!map || !visibleMapCenter || !lastCameraTarget.current) return;
-    panToVisibleCenter(lastCameraTarget.current);
+    if (!visibleMapViewport) {
+      previousVisibleMapViewport.current = null;
+      return;
+    }
+    if (!map) return;
+
+    const previousViewport = previousVisibleMapViewport.current;
+    previousVisibleMapViewport.current = visibleMapViewport;
+
+    if (!previousViewport) return;
+    compensateForViewportChange(previousViewport, visibleMapViewport);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, visibleMapCenter]);
+  }, [map, visibleMapViewport]);
 
   return null;
 }
@@ -151,6 +199,7 @@ function RestaurantMarkers() {
   const {
     restaurants,
     selectedRestaurant,
+    searchRequestVersion,
     selectRestaurant,
   } = useRestaurantSearch();
 
@@ -166,6 +215,7 @@ function RestaurantMarkers() {
     <>
       <MapPositionController
         searchCenter={searchCenter}
+        searchRequestVersion={searchRequestVersion}
         selectedRestaurant={selectedRestaurant}
       />
 

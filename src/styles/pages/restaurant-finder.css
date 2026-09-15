@@ -40,7 +40,6 @@
     right: var(--floating-panel-gap);
     width: auto;
     height: min(50dvh, 30.5rem);
-    transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .restaurant-sidebar--collapsed {
@@ -49,10 +48,14 @@
 
   .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed) {
     /* Keep the bottom anchored while the search form grows upward. */
-    height: auto;
+    height: min(17rem, calc(100dvh - var(--top-action-bar-height) - (var(--floating-panel-gap) * 3) - var(--space-3)));
     max-height: calc(100dvh - var(--top-action-bar-height) - (var(--floating-panel-gap) * 3) - var(--space-3));
     overflow-y: auto;
     overscroll-behavior: contain;
+  }
+
+  .restaurant-sidebar--search-tab:not(.restaurant-sidebar--collapsed):has(.restaurant-settings[open]) {
+    height: auto;
   }
 
   .restaurant-sidebar--search-tab .nearby-restaurant-search,
@@ -70,10 +73,5 @@
     max-height: none;
     overflow: visible;
   }
-}
 
-@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
-  .restaurant-sidebar {
-    transition: none;
-  }
 }

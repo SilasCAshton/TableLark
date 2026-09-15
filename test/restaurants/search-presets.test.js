@@ -17,12 +17,12 @@ test("defines ordered built-in restaurant search presets", () => {
       "East & Southeast Asian",
       "Indian & South Asian",
       "Latin & Caribbean",
+      "Italian",
       "European",
       "Mediterranean & Middle Eastern",
       "African",
       "Pizza & Sandwiches",
       "Seafood",
-      "Desserts & Treats",
       "Bars & Pubs",
       "Vegetarian & Lighter Meals",
     ],
@@ -71,4 +71,10 @@ test("defines a coffee and brunch preset", () => {
   assert.ok(
     preset.includedPrimaryTypes.includes("brunch_restaurant"),
   );
+});
+
+test("defines an Italian preset", () => {
+  const preset = getRestaurantSearchPreset("italian");
+
+  assert.deepEqual(preset.includedPrimaryTypes, ["italian_restaurant"]);
 });

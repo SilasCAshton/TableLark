@@ -15,7 +15,6 @@ const validPopularSearch = {
   radiusMeters: 8047,
   filters: {
     presetId: "all",
-    minRating: 4,
     maxResults: 20,
   },
 };
@@ -29,7 +28,7 @@ test("validates and normalizes a popular search", () => {
   );
   assert.ok(search.filters.includedPrimaryTypes.includes("cafe"));
   assert.equal(search.filters.includedTypes, undefined);
-  assert.equal(search.filters.minRating, 4);
+  assert.equal(search.filters.minRating, undefined);
   assert.equal(search.filters.maxResults, 20);
 });
 
@@ -58,19 +57,18 @@ test("rejects search modes outside the current UI model", () => {
   );
 });
 
-test("validates hidden-gem filters", () => {
+test("validates hidden-gem review filters", () => {
   const search = validateRestaurantSearch({
     ...validPopularSearch,
     mode: "hidden",
     filters: {
       ...validPopularSearch.filters,
-      minRating: 4.2,
       minReviews: 20,
       maxReviews: 250,
     },
   });
 
-  assert.equal(search.filters.minRating, 4.2);
+  assert.equal(search.filters.minRating, undefined);
   assert.equal(search.filters.minReviews, 20);
   assert.equal(search.filters.maxReviews, 250);
 });
@@ -132,7 +130,6 @@ test("rejects inverted hidden-gem review limits", () => {
         mode: "hidden",
         filters: {
           ...validPopularSearch.filters,
-          minRating: 4,
           minReviews: 500,
           maxReviews: 100,
         },

@@ -2,6 +2,7 @@
 
 import { usePollBuilder } from "@/context/PollBuilderContext";
 import { useRestaurantSearch } from "@/context/RestaurantSearchContext";
+import { qualifiesForHiddenGemBadge } from "@/lib/restaurants/display-filters";
 import { POLL_RESTAURANT_COLOR } from "@/lib/restaurants/poll-appearance";
 function formatPriceLevel(priceLevel) {
   const priceLabels = {
@@ -26,9 +27,6 @@ function RestaurantCard({ restaurant }) {
     highlightedRestaurantId,
     highlightRestaurant,
     selectRestaurant,
-    minRating,
-    minReviews,
-    maxReviews,
   } = useRestaurantSearch();
 
   const isSelected =
@@ -44,12 +42,7 @@ function RestaurantCard({ restaurant }) {
     restaurant.priceLevel,
   );
 
-  const isHiddenGem =
-    restaurant.rating !== null &&
-    restaurant.rating >= minRating &&
-    restaurant.reviewCount !== null &&
-    restaurant.reviewCount >= minReviews &&
-    restaurant.reviewCount <= maxReviews;
+  const isHiddenGem = qualifiesForHiddenGemBadge(restaurant);
 
   return (
     <article

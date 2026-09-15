@@ -36,11 +36,11 @@ The polling API validates request size and JSON, reads private cookies, and dele
 | --- | --- | --- | --- |
 | Page rendering | Composes the homepage, Finder, responsive panels, forms, result cards, loading states, and errors. | Renders the initial Next.js route structure and metadata. | Google Maps JavaScript API renders the interactive base map. |
 | Location selection | Opens location controls, handles selected coordinates, and routes homepage selections to `/finder?lat=...&lng=...`. | Validates optional Finder query coordinates before using them as initial state. | The browser Geolocation API supplies device coordinates after permission. Google Places supplies address suggestions and converts a selected prediction into coordinates. |
-| Search state | Holds the selected location, radius, search mode, preset, filters, results, loading state, errors, and selected restaurant in React context. | Does not persist user search state between navigations or sessions. | No Google service owns TableLark's React state. |
+| Search state | Holds the selected location, radius, search mode, preset, display filters, candidate results, visible results, loading state, errors, and selected restaurant in React context. | Does not persist user search state between navigations or sessions. | No Google service owns TableLark's React state. |
 | Search request | Builds JSON, sends `POST /api/restaurants/search`, aborts stale requests, and displays the response. | Limits request size and rate, parses JSON, validates every field, and maps errors to safe HTTP responses. | Google receives only validated server requests. |
 | Category selection | Displays TableLark's named presets. | Resolves the preset ID to a trusted list of Google place types; client-provided type arrays are not trusted. | Places API filters results using the supplied included types or primary types. |
-| Popular search | Displays the mode and minimum-rating controls. | Makes one Places request ranked by popularity and removes results below the requested rating. | Places API performs the nearby lookup and its `POPULARITY` ranking. |
-| Hidden-gem search | Displays rating and review-count controls and renders the returned ranking. | Subdivides saturated areas, gathers results, removes known chains, removes duplicates and out-of-radius places, applies thresholds, calculates hidden-gem scores, and sorts the results. | Places API returns candidate places ranked by distance for each bounded request. Google does not decide what qualifies as a hidden gem. |
+| Popular search | Applies live minimum-rating, maximum-price, and unknown-price controls to the stored candidate set. | Makes one Places request ranked by popularity and returns the normalized candidates. | Places API performs the nearby lookup and its `POPULARITY` ranking. |
+| Hidden-gem search | Applies live rating and price controls to the stored ranked candidates and shows the badge only on candidates rated 4.0 or higher. | Subdivides saturated areas, gathers results, removes known chains, removes duplicates and out-of-radius places, applies review-count thresholds, calculates hidden-gem scores, and sorts the results. | Places API returns candidate places ranked by distance for each bounded request. Google does not decide what qualifies as a hidden gem. |
 | Restaurant data | Formats ratings, price levels, addresses, attribution links, and Google Maps links. | Requests a field mask and normalizes Google's response into TableLark's restaurant model. | Places API supplies place IDs, names, addresses, coordinates, ratings, review counts, price levels, types, icon URIs, Google Maps URIs, and required attributions. |
 | Map interaction | Renders TableLark pins, pans to the search center or selected restaurant, changes zoom, and opens an information window. | No map rendering responsibility. | Maps JavaScript API supplies map tiles, camera behavior, advanced-marker primitives, and info-window primitives. |
 
@@ -129,7 +129,6 @@ sequenceDiagram
         Places-->>Search: Raw place records
         Search->>Logic: Normalize candidates
         Logic-->>Search: TableLark restaurant records
-        Search->>Search: Apply minimum rating
     else Hidden-gem mode
         loop Until areas are not saturated or 8 requests are reached
             Search->>Places: Bounded searchNearby request ranked by DISTANCE
@@ -143,7 +142,8 @@ sequenceDiagram
 
     Search-->>Route: Normalized restaurant results
     Route-->>Hook: JSON results and request-count metadata
-    Hook->>Context: Store results or safe error state
+    Hook->>Context: Store candidates or safe error state
+    Context->>Context: Apply live rating and price filters
     Context-->>Controls: Re-render cards and markers
 ```
 
@@ -184,11 +184,12 @@ lat, lng, radiusMeters
 `RestaurantSearchContext` owns:
 
 ```text
-searchMode, cuisinePresetId, minRating, minReviews, maxReviews
-restaurants, selectedRestaurantId, isLoading, errorMessage, hasSearched
+searchMode, cuisinePresetId, minRating, maxPriceLevel, includeUnpriced
+minReviews, maxReviews, restaurantCandidates, visible restaurants
+selectedRestaurantId, isLoading, errorMessage, hasSearched
 ```
 
-Derived values such as `searchFilters` and `selectedRestaurant` are memoized. Actions centralize the transitions for beginning, completing, failing, clearing, and selecting within a search.
+Derived values such as `searchFilters`, visible `restaurants`, and `selectedRestaurant` are memoized. Rating and price changes filter `restaurantCandidates` in memory, so cards and markers update without another server or Google request. Actions centralize the transitions for beginning, completing, failing, clearing, and selecting within a search.
 
 `PollBuilderContext` separately owns the in-memory restaurant shortlist. Adding a result retains the complete normalized restaurant object even though the Poll menu displays only its name and removal control. Keeping this state outside `RestaurantSearchContext` allows search results to change or clear without discarding the prospective poll list. Duplicate place IDs and additions beyond the backend's 20-option limit are ignored. The Poll menu submits these snapshots and its duration, ballot-limit, and tie-mode settings to the polling API, then routes the organizer to the generated shared page.
 
@@ -233,7 +234,7 @@ Each request uses a 15-second timeout, `cache: "no-store"`, U.S. region and Engl
 
 ### Popular mode
 
-Popular mode makes one Google request using `rankPreference: "POPULARITY"`. Google supplies the candidate order. TableLark then removes candidates below the selected minimum rating. Review-count inputs are ignored for this mode.
+Popular mode makes one Google request using `rankPreference: "POPULARITY"`. Google supplies the candidate order, which TableLark preserves. Review-count inputs are ignored for this mode. After the candidate set reaches the browser, the active minimum-rating and maximum-price controls determine which candidates appear.
 
 ### Hidden-gem mode
 
@@ -245,11 +246,13 @@ Hidden-gem mode uses TableLark-specific logic:
 4. Stop when an area is no longer saturated, its effective radius reaches approximately half a mile, the request is aborted, or 8 Google requests have been made.
 5. Deduplicate candidates by Google place ID and remove candidates outside the originally requested radius.
 6. Remove restaurants matching the curated chain alias list.
-7. Require the chosen rating and review-count ranges.
+7. Require a known rating and the configured review-count range.
 8. Calculate a weighted score: 65% rating quality, 10% review confidence, and 25% obscurity based on logarithmic review count.
 9. Sort by hidden-gem score, then rating.
 
 `maxResults` is capped at 20 per Google request. Hidden-gem mode can aggregate candidates from several requests before filtering and ranking.
+
+The browser applies the selected minimum rating and maximum price after this ranking. Lowering the rating can therefore reveal lower-rated candidates without repeating the search or changing their order. Only ranked hidden-gem candidates rated 4.0 or higher receive the Hidden gem badge. The price filter retains places at or below the selected price level; a separate checkbox controls whether places without Google pricing information remain visible and defaults to enabled.
 
 ## API contract
 
@@ -265,7 +268,6 @@ Hidden-gem mode uses TableLark-specific logic:
   "radiusMeters": 8047,
   "filters": {
     "presetId": "all",
-    "minRating": 4,
     "minReviews": 10,
     "maxReviews": 300,
     "maxResults": 20
@@ -337,7 +339,8 @@ Hidden-gem results also contain a numeric `hiddenGemScore`. Missing optional Goo
 - hidden-gem area subdivision and request limits;
 - chain identification and exclusion;
 - distance enforcement and deduplication;
-- minimum-rating and review-count filters;
+- server-side hidden-gem review-count filtering;
+- browser-side minimum-rating, maximum-price, and unknown-price filtering;
 - the hidden-gem scoring formula and final ordering;
 - UI state, card and marker selection, responsive layout, and error presentation; and
 - protection of the private server API key.

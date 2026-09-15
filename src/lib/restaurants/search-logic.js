@@ -160,7 +160,6 @@ export function filterAndScoreHiddenGems(
       }
 
       return (
-        restaurant.rating >= filters.minRating &&
         restaurant.reviewCount >= filters.minReviews &&
         restaurant.reviewCount <= filters.maxReviews
       );

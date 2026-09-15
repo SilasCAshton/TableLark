@@ -30,13 +30,13 @@ test("breakfast browsing does not accept lunch-only or sandwich-only evidence", 
     ["cafe", "breakfast", "restaurant"]);
 });
 
-test("desserts preserve standalone bakeries and unrelated presets are unchanged", () => {
-  assert.deepEqual(filterBakeriesAndDelis(places, "desserts"), places);
+test("unrelated presets are unchanged", () => {
+  assert.deepEqual(filterBakeriesAndDelis(places, "italian"), places);
   assert.deepEqual(filterBakeriesAndDelis(places, "asian"), places);
 });
 
 test("requests only relevant extra fields and preserves unknown values", () => {
-  assert.deepEqual(getBakeryDeliFields("desserts"), []);
+  assert.deepEqual(getBakeryDeliFields("italian"), []);
   assert.deepEqual(getBakeryDeliFields("asian"), []);
   assert.deepEqual(getBakeryDeliFields("coffee-brunch"), [
     "places.types", "places.servesBreakfast", "places.servesBrunch",

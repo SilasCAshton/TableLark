@@ -10,7 +10,7 @@ import RestaurantMarkers from "./restaurants/RestaurantMarkers";
 const MOBILE_MAP_QUERY = "(max-width: 720px)";
 
 function VisibleMapCenterObserver({ containerRef }) {
-  const { updateVisibleMapCenter } = useMapViewport();
+  const { updateVisibleMapViewport } = useMapViewport();
 
   useEffect(() => {
     const mapElement = containerRef.current;
@@ -50,9 +50,15 @@ function VisibleMapCenterObserver({ containerRef }) {
           visibleLeft = mapBounds.left;
         }
 
-        updateVisibleMapCenter({
-          x: (visibleLeft + visibleRight) / 2 - mapBounds.left,
-          y: (visibleTop + visibleBottom) / 2 - mapBounds.top,
+        updateVisibleMapViewport({
+          center: {
+            x: (visibleLeft + visibleRight) / 2 - mapBounds.left,
+            y: (visibleTop + visibleBottom) / 2 - mapBounds.top,
+          },
+          mapSize: {
+            width: mapBounds.width,
+            height: mapBounds.height,
+          },
         });
       });
     }
@@ -83,9 +89,9 @@ function VisibleMapCenterObserver({ containerRef }) {
       resizeObserver.disconnect();
       mutationObserver.disconnect();
       window.removeEventListener("resize", measureVisibleMap);
-      updateVisibleMapCenter(null);
+      updateVisibleMapViewport(null);
     };
-  }, [containerRef, updateVisibleMapCenter]);
+  }, [containerRef, updateVisibleMapViewport]);
 
   return null;
 }

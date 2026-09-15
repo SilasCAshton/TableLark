@@ -88,7 +88,7 @@ test("deduplicates restaurants and removes distant results", () => {
   assert.equal(restaurants[0].id, "near");
 });
 
-test("filters and ranks hidden gems", () => {
+test("filters and ranks hidden gems without applying a display rating", () => {
   const restaurants = filterAndScoreHiddenGems(
     [
       { id: "a", rating: 4.8, reviewCount: 40 },
@@ -96,7 +96,6 @@ test("filters and ranks hidden gems", () => {
       { id: "c", rating: 3.5, reviewCount: 20 },
     ],
     {
-      minRating: 4,
       minReviews: 10,
       maxReviews: 300,
     },
@@ -104,7 +103,7 @@ test("filters and ranks hidden gems", () => {
 
   assert.deepEqual(
     restaurants.map((restaurant) => restaurant.id),
-    ["a", "b"],
+    ["a", "b", "c"],
   );
   assert.ok(
     restaurants[0].hiddenGemScore >
@@ -161,7 +160,6 @@ test("removes known chains from hidden-gem results", () => {
       },
     ],
     {
-      minRating: 4,
       minReviews: 10,
       maxReviews: 300,
     },

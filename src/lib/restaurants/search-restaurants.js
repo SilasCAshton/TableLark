@@ -26,15 +26,7 @@ async function searchSingleArea(search, signal) {
     signal,
   });
 
-  if (search.mode !== "popular") {
-    return restaurants;
-  }
-
-  return restaurants.filter(
-    (restaurant) =>
-      restaurant.rating !== null &&
-      restaurant.rating >= search.filters.minRating,
-  );
+  return restaurants;
 }
 
 async function searchHiddenGems(search, signal) {

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
+import { useAnimatedHeight } from "@/hooks/useAnimatedHeight";
 import NearbyRestaurantSearch from "./NearbyRestaurantSearch";
 
 function RestaurantDiscoveryPanel() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeMobileTab, setActiveMobileTab] = useState("search");
+  const sidebarRef = useRef(null);
+  useAnimatedHeight(sidebarRef);
 
   return (
     <aside
+      ref={sidebarRef}
       className={`restaurant-sidebar ${
         isCollapsed ? "restaurant-sidebar--collapsed" : ""
       } ${

@@ -13,24 +13,26 @@ import {
 const MapViewportContext = createContext(null);
 
 export function MapViewportProvider({ children }) {
-  const [visibleMapCenter, setVisibleMapCenter] = useState(null);
+  const [visibleMapViewport, setVisibleMapViewport] = useState(null);
 
-  const updateVisibleMapCenter = useCallback((nextCenter) => {
-    setVisibleMapCenter((currentCenter) => {
+  const updateVisibleMapViewport = useCallback((nextViewport) => {
+    setVisibleMapViewport((currentViewport) => {
       if (
-        currentCenter?.x === nextCenter?.x &&
-        currentCenter?.y === nextCenter?.y
+        currentViewport?.center.x === nextViewport?.center.x &&
+        currentViewport?.center.y === nextViewport?.center.y &&
+        currentViewport?.mapSize.width === nextViewport?.mapSize.width &&
+        currentViewport?.mapSize.height === nextViewport?.mapSize.height
       ) {
-        return currentCenter;
+        return currentViewport;
       }
 
-      return nextCenter;
+      return nextViewport;
     });
   }, []);
 
   const value = useMemo(
-    () => ({ visibleMapCenter, updateVisibleMapCenter }),
-    [visibleMapCenter, updateVisibleMapCenter],
+    () => ({ visibleMapViewport, updateVisibleMapViewport }),
+    [visibleMapViewport, updateVisibleMapViewport],
   );
 
   return (

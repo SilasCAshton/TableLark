@@ -144,15 +144,6 @@ export function validateRestaurantSearch(payload) {
     },
   };
 
-  if (mode === "popular" || mode === "hidden") {
-    validatedSearch.filters.minRating = readNumberInRange(
-      filters.minRating ?? 0,
-      "Minimum rating",
-      0,
-      5,
-    );
-  }
-
   if (mode === "hidden") {
     const minReviews = readIntegerInRange(
       filters.minReviews ?? DEFAULT_MIN_REVIEWS,

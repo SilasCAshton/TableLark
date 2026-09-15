@@ -13,7 +13,6 @@ const DELI_TYPES = [
 const BAKERY_TYPES = [...DELI_TYPES, "coffee_shop"];
 
 function checksBakeriesAndDelis(presetId) {
-  if (presetId === "desserts") return false;
   const types = getRestaurantSearchPreset(presetId)?.includedPrimaryTypes ?? [];
   return types.includes("bakery") || types.includes("deli");
 }
@@ -32,7 +31,6 @@ export function normalizeMealServices(place) {
 }
 
 // Dedicated meal-destination check, not a configurable preset rule engine.
-// Dessert browsing intentionally retains standalone bakeries.
 export function filterBakeriesAndDelis(restaurants, presetId) {
   if (!checksBakeriesAndDelis(presetId)) return restaurants;
   return restaurants.filter((place) => {

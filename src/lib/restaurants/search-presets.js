@@ -167,6 +167,9 @@ export const RESTAURANT_SEARCH_PRESETS = Object.freeze([
       "tex_mex_restaurant",
     ],
   }),
+  createSearchPreset("italian", "Italian", {
+    includedPrimaryTypes: ["italian_restaurant"],
+  }),
   createSearchPreset("european", "European", {
     includedPrimaryTypes: [
       "european_restaurant",
@@ -238,22 +241,6 @@ export const RESTAURANT_SEARCH_PRESETS = Object.freeze([
       "oyster_bar_restaurant",
       "fish_and_chips_restaurant",
       "sushi_restaurant",
-    ],
-  }),
-  createSearchPreset("desserts", "Desserts & Treats", {
-    includedPrimaryTypes: [
-      "acai_shop",
-      "bakery",
-      "cake_shop",
-      "candy_store",
-      "chocolate_shop",
-      "confectionery",
-      "dessert_restaurant",
-      "dessert_shop",
-      "donut_shop",
-      "ice_cream_shop",
-      "juice_shop",
-      "pastry_shop",
     ],
   }),
   createSearchPreset("bars-pubs", "Bars & Pubs", {

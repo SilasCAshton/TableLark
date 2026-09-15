@@ -44,6 +44,10 @@ function RestaurantSearchControls() {
     setCuisinePresetId,
     minRating,
     setMinRating,
+    maxPriceLevel,
+    setMaxPriceLevel,
+    includeUnpriced,
+    setIncludeUnpriced,
     isLoading,
   } = useRestaurantSearch();
   const { searchRestaurants } = useRestaurantSearchRequest();
@@ -138,6 +142,38 @@ function RestaurantSearchControls() {
               <option value={4.5}>4.5+</option>
             </select>
           </div>
+
+          <div className="restaurant-control restaurant-control--full">
+            <label htmlFor="maximum-price">
+              Maximum price
+            </label>
+
+            <select
+              id="maximum-price"
+              value={maxPriceLevel}
+              onChange={(event) =>
+                setMaxPriceLevel(event.target.value)
+              }
+            >
+              <option value="ANY">Any price</option>
+              <option value="INEXPENSIVE">$ or less</option>
+              <option value="MODERATE">$$ or less</option>
+              <option value="EXPENSIVE">$$$ or less</option>
+              <option value="VERY_EXPENSIVE">$$$$ or less</option>
+            </select>
+          </div>
+
+          <label className="restaurant-checkbox" htmlFor="include-unpriced">
+            <input
+              id="include-unpriced"
+              type="checkbox"
+              checked={includeUnpriced}
+              onChange={(event) =>
+                setIncludeUnpriced(event.target.checked)
+              }
+            />
+            <span>Include places with no pricing information</span>
+          </label>
 
         </div>
       </details>

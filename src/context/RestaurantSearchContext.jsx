@@ -15,6 +15,10 @@ import {
   DEFAULT_MIN_RATING,
   DEFAULT_MIN_REVIEWS,
 } from "@/lib/restaurants/search-config";
+import {
+  ANY_PRICE_LEVEL,
+  filterRestaurantsForDisplay,
+} from "@/lib/restaurants/display-filters";
 
 const RestaurantSearchContext = createContext(null);
 
@@ -24,24 +28,41 @@ export function RestaurantSearchProvider({ children }) {
     DEFAULT_RESTAURANT_SEARCH_PRESET_ID,
   );
   const [minRating, setMinRating] = useState(DEFAULT_MIN_RATING);
+  const [maxPriceLevel, setMaxPriceLevel] = useState(ANY_PRICE_LEVEL);
+  const [includeUnpriced, setIncludeUnpriced] = useState(true);
 
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurantCandidates, setRestaurantCandidates] = useState([]);
   const [selectedRestaurantId, setSelectedRestaurantId] =
     useState(null);
   const [highlightedRestaurantId, highlightRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+  const [searchRequestVersion, setSearchRequestVersion] = useState(0);
 
   const searchFilters = useMemo(
     () => ({
       presetId: cuisinePresetId,
-      minRating,
       minReviews: DEFAULT_MIN_REVIEWS,
       maxReviews: DEFAULT_MAX_REVIEWS,
       maxResults: DEFAULT_MAX_RESULTS,
     }),
-    [cuisinePresetId, minRating],
+    [cuisinePresetId],
+  );
+
+  const restaurants = useMemo(
+    () =>
+      filterRestaurantsForDisplay(restaurantCandidates, {
+        minRating,
+        maxPriceLevel,
+        includeUnpriced,
+      }),
+    [
+      restaurantCandidates,
+      minRating,
+      maxPriceLevel,
+      includeUnpriced,
+    ],
   );
 
   const selectedRestaurant = useMemo(
@@ -59,16 +80,17 @@ export function RestaurantSearchProvider({ children }) {
     setHasSearched(true);
     setSelectedRestaurantId(null);
     highlightRestaurant(null);
+    setSearchRequestVersion((version) => version + 1);
   }, []);
 
   const completeSearch = useCallback((newRestaurants) => {
-    setRestaurants(newRestaurants);
+    setRestaurantCandidates(newRestaurants);
     setIsLoading(false);
     setErrorMessage("");
   }, []);
 
   const failSearch = useCallback((message) => {
-    setRestaurants([]);
+    setRestaurantCandidates([]);
     setSelectedRestaurantId(null);
     highlightRestaurant(null);
     setIsLoading(false);
@@ -77,7 +99,7 @@ export function RestaurantSearchProvider({ children }) {
   }, []);
 
   const clearSearchResults = useCallback(() => {
-    setRestaurants([]);
+    setRestaurantCandidates([]);
     setSelectedRestaurantId(null);
     highlightRestaurant(null);
     setIsLoading(false);
@@ -108,6 +130,10 @@ export function RestaurantSearchProvider({ children }) {
         setCuisinePresetId,
         minRating,
         setMinRating,
+        maxPriceLevel,
+        setMaxPriceLevel,
+        includeUnpriced,
+        setIncludeUnpriced,
         minReviews: DEFAULT_MIN_REVIEWS,
         maxReviews: DEFAULT_MAX_REVIEWS,
         searchFilters,
@@ -120,6 +146,7 @@ export function RestaurantSearchProvider({ children }) {
         isLoading,
         errorMessage,
         hasSearched,
+        searchRequestVersion,
 
         beginSearch,
         completeSearch,
