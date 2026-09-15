@@ -17,7 +17,11 @@ database driver is needed. Deploy the Next.js app with its server routes.
    `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAP_ID`, and
    `GOOGLE_PLACES_API_KEY`. Authorize the deployed website in the browser
    key's referrer restrictions.
-4. Set the Vercel Build Command to `npm run db:migrate && npm run build`.
+4. Keep Vercel's Build Command on its project default. The checked-in
+   `vercel.json` runs `npm run db:migrate && npm run build`, so a deployment
+   cannot become ready with an unavailable database or an outdated schema.
+   If the Vercel project has a custom Build Command, remove that override or
+   set it to the same command.
    The migration runner prefers `DATABASE_URL_UNPOOLED`, falling back to
    `DATABASE_URL` for local development. The direct Neon connection is
    required because the runner uses a session-level advisory lock, which

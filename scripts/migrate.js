@@ -17,8 +17,15 @@ const migrationsDirectory = path.join(
 );
 const MIGRATION_LOCK_ID = 784215963;
 
-function checksum(contents) {
-  return createHash("sha256").update(contents).digest("hex");
+export function migrationChecksum(contents) {
+  // Git may check SQL files out with CRLF on Windows and LF on Vercel.
+  // Migrations are identical in either form, so their recorded checksum must
+  // not depend on the operating system that ran them.
+  const canonicalContents = contents.replace(/\r\n/g, "\n");
+
+  return createHash("sha256")
+    .update(canonicalContents)
+    .digest("hex");
 }
 
 export async function migrateDatabase(databaseUrl) {
@@ -56,7 +63,7 @@ export async function migrateDatabase(databaseUrl) {
         path.join(migrationsDirectory, file),
         "utf8",
       );
-      const migrationChecksum = checksum(sql);
+      const expectedChecksum = migrationChecksum(sql);
       const applied = await client.query(
         `
           SELECT checksum
@@ -67,7 +74,7 @@ export async function migrateDatabase(databaseUrl) {
       );
 
       if (applied.rowCount > 0) {
-        if (applied.rows[0].checksum !== migrationChecksum) {
+        if (applied.rows[0].checksum !== expectedChecksum) {
           throw new Error(
             `Applied migration ${file} has been modified.`,
           );
@@ -86,7 +93,7 @@ export async function migrateDatabase(databaseUrl) {
               (name, checksum)
             VALUES ($1, $2)
           `,
-          [file, migrationChecksum],
+          [file, expectedChecksum],
         );
         await client.query("COMMIT");
         console.log(`Applied ${file}`);

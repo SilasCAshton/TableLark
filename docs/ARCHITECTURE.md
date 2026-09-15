@@ -131,7 +131,7 @@ sequenceDiagram
         Logic-->>Search: TableLark restaurant records
         Search->>Search: Apply minimum rating
     else Hidden-gem mode
-        loop Until areas are not saturated or 16 requests are reached
+        loop Until areas are not saturated or 8 requests are reached
             Search->>Places: Bounded searchNearby request ranked by DISTANCE
             Places-->>Search: Candidate place records
         end
@@ -214,7 +214,7 @@ Cards and markers use the same `selectedRestaurantId` in context. Selecting a ca
 `POST /api/restaurants/search` runs in the Node.js runtime. Before searching it:
 
 - rejects bodies larger than 10,000 bytes using both the header and the encoded body;
-- applies an in-memory limit of 12 requests per 60 seconds per forwarded IP, real IP, or the `local` fallback;
+- applies an in-memory limit of 8 requests per 60 seconds per forwarded IP, real IP, or the `local` fallback;
 - parses JSON and returns a safe `400` error for malformed input;
 - validates modes, coordinates, radius, preset IDs, filter ranges, and the maximum result count; and
 - resolves preset IDs on the server to prevent callers from injecting arbitrary Google place types.
@@ -242,7 +242,7 @@ Hidden-gem mode uses TableLark-specific logic:
 1. Search the requested circle using Google's distance ranking.
 2. Treat a response containing the per-request maximum as potentially saturated.
 3. Subdivide saturated coverage into four child areas and continue recursively.
-4. Stop when an area is no longer saturated, its effective radius reaches approximately half a mile, the request is aborted, or 16 Google requests have been made.
+4. Stop when an area is no longer saturated, its effective radius reaches approximately half a mile, the request is aborted, or 8 Google requests have been made.
 5. Deduplicate candidates by Google place ID and remove candidates outside the originally requested radius.
 6. Remove restaurants matching the curated chain alias list.
 7. Require the chosen rating and review-count ranges.
