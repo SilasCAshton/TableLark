@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { LocationProvider } from "@/context/LocationContext";
 
 export const metadata = {
   title: "TableLark Restaurant Finder",
@@ -37,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <LocationProvider>{children}</LocationProvider>
         <Analytics />
       </body>
     </html>

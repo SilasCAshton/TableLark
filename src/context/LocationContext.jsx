@@ -2,9 +2,12 @@
 
 import {
   createContext,
+  useEffect,
   useContext,
   useState,
 } from "react";
+
+import { readSearchLocation, saveSearchLocation } from "@/lib/restaurants/location-session";
 
 const LocationContext = createContext();
 
@@ -14,11 +17,18 @@ const DEFAULT_LOCATION = {
   radiusMeters: 8047,
 };
 
-export function LocationProvider({ children, initialLocation }) {
-  const [location, setLocation] = useState(() => ({
-    ...DEFAULT_LOCATION,
-    ...initialLocation,
-  }));
+export function LocationProvider({ children }) {
+  const [location, setLocation] = useState(DEFAULT_LOCATION);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    setLocation({ ...DEFAULT_LOCATION, ...readSearchLocation() });
+    setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (isReady) saveSearchLocation(location);
+  }, [location, isReady]);
 
   function updateLocation(lat, lng) {
     setLocation((currentLocation) => ({
@@ -52,7 +62,7 @@ export function LocationProvider({ children, initialLocation }) {
         updateRadius,
       }}
     >
-      {children}
+      {isReady ? children : <p role="status">Loading your search location...</p>}
     </LocationContext.Provider>
   );
 }

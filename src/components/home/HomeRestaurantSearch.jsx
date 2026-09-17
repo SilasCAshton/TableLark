@@ -4,19 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { APIProvider } from "@vis.gl/react-google-maps";
 
+import { useLocation } from "@/context/LocationContext";
+
 import AddressInput from "@/components/locationComponents/AddressInput";
-
-function buildFinderUrl(lat, lng) {
-  const searchParams = new URLSearchParams({
-    lat: String(lat),
-    lng: String(lng),
-  });
-
-  return `/finder?${searchParams.toString()}`;
-}
 
 function AddressAutocomplete() {
   const router = useRouter();
+  const { updateLocation } = useLocation();
 
   return (
     <div className="home-hero-search__address-panel">
@@ -25,9 +19,10 @@ function AddressAutocomplete() {
         labelDescription="Choose one of Google's suggestions to continue."
         placeholder="Start typing an address..."
         showSelectedAddress={false}
-        processLatitudeAndLongitude={(lat, lng) =>
-          router.push(buildFinderUrl(lat, lng))
-        }
+        processLatitudeAndLongitude={(lat, lng) => {
+          updateLocation(lat, lng);
+          router.push("/finder");
+        }}
       />
     </div>
   );
@@ -35,6 +30,7 @@ function AddressAutocomplete() {
 
 export default function HomeRestaurantSearch() {
   const router = useRouter();
+  const { updateLocation } = useLocation();
   const [isLocating, setIsLocating] = useState(false);
   const [isAddressOpen, setIsAddressOpen] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
@@ -54,12 +50,11 @@ export default function HomeRestaurantSearch() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        router.push(
-          buildFinderUrl(
-            position.coords.latitude,
-            position.coords.longitude,
-          ),
+        updateLocation(
+          position.coords.latitude,
+          position.coords.longitude,
         );
+        router.push("/finder");
       },
       () => {
         setIsLocating(false);
